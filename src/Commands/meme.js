@@ -23,7 +23,6 @@ module.exports = {
         var embd = new MessageEmbed()
         await meme.then( (e) =>{
             embd.setTitle(`${e.caption}`)
-            embd.setDescription(`** **`)
             embd.setImage(e.image)
         })
         await interaction.reply({embeds: [embd]});

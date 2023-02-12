@@ -4,28 +4,35 @@ const { MessageEmbed } = require("discord.js");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("help")
-    .setDescription("Sends a list of the commands available")
-    .addStringOption(opt => opt.setName("command").setDescription("Type the name of the command you want help in")),
+    .setDescription("Sends a list of the commands available"),
   async execute(interaction) {
     var commandsEmbed = new MessageEmbed()
       .setTitle("Brottoli's Commands List")
       .setColor("RANDOM");
 
     var commandsArray = interaction.client.commands;
-    for (const command of commandsArray) {
-      if(interaction.options.getString("command") == command[0]){
-        commandsEmbed.setTitle("yo")
-      }
-      if(interaction.options.getString("command") != command[1].data.name){
-        
+    commandsArray.forEach((command) => {
+      commandsEmbed.addFields({
+        name: `${command.data.name}`,
+        value: `${command.data.description}`,
+        inline: true,
+      });
+      command.data.options.forEach(sub =>{
         commandsEmbed.addFields({
-          name: `${command[1].data.name}`,
-          value: `${command[1].data.description}`,
+          name: `${command.data.name} ${sub.name}`,
+          value: `${sub.description}`,
           inline: true,
         });
-      }
-    }
-
+        sub.options.forEach(option =>{
+          commandsEmbed.addFields({
+            name: `${command.data.name} ${sub.name} ${option.name}`,
+            value: `${option.description}`,
+            inline: true,
+          });
+        })
+      })
+      
+    });
     
     await interaction.reply({ embeds: [commandsEmbed] });
   },

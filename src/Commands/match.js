@@ -18,7 +18,7 @@ module.exports = {
         .setName("use")
         .setDescription("Matches you with other users with similar traits")
         .addSubcommand(sub2 =>
-          sub2.setName("start").setDescription("starts matching")
+          sub2.setName("start").setDescription("start matching")
         )
     
     ),

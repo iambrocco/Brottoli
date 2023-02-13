@@ -1,3 +1,5 @@
+const { MessageEmbed } = require("discord.js");
+
 module.exports = {
   name: "interactionCreate",
   async execute(interaction) {
@@ -24,7 +26,7 @@ module.exports = {
           }
         }
 
-        await interaction.reply(`${image}`);
+        await interaction.reply({embeds: [new MessageEmbed().setImage(image)]});
       }
     }
   },

@@ -1,7 +1,8 @@
 // Import
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const { Modal, TextInputComponent, MessageActionRow } = require("discord.js");
+const { Modal, TextInputComponent, MessageActionRow, MessageAttachment } = require("discord.js");
 const { MessageEmbed } = require("discord.js");
+const canvas = require("canvas").createCanvas(600, 600, "svg").getContext("2d");
 const Icons = require("../Data/icons.json").Icons;
 // Creating the command
 module.exports = {
@@ -26,16 +27,7 @@ module.exports = {
             .setDescription("Generates A Minecraft Achievement Image")
         )
     )
-    .addSubcommandGroup((group) =>
-      group
-        .setName("logo")
-        .setDescription("Generates a minecraft-like logo")
-        .addSubcommand((sub) =>
-          sub
-            .setName("generate")
-            .setDescription("Generates a minecraft-like logo")
-        )
-    ),
+ ,   
   async execute(interaction) {
     if (interaction.options.getSubcommandGroup() === "achievement") {
       if (interaction.options.getSubcommand() == "generate") {
@@ -119,5 +111,6 @@ module.exports = {
         });
       }
     }
+    
   },
 };

@@ -2,9 +2,7 @@ html, body{
     height: 100%;
     width: 100%;
 }
-.dash{
-    display: none;
-}
+
 .guildDiv img{
     border: 1px black solid;
     border-radius: 30%;

@@ -30,7 +30,7 @@
           <img src="" id="avatar" />
           <div id="name"></div>
         </div>
-        <a href="/docs/dashboard/">Logout</a>
+        <a  href="dashboard/">Logout</a>
       </div>
     </div>
     <script>
@@ -42,7 +42,7 @@
         ];
 
         if (!accessToken) {
-          window.location.href("/");
+          window.location.href("/dashboard");
           return (document.getElementById("login").style.display = "block");
         }
 

@@ -1,0 +1,12 @@
+html, body{
+    height: 100%;
+    width: 100%;
+}
+.guildDiv img{
+    border: 1px black solid;
+    border-radius: 30%;
+    height: 75px;
+}
+.guildDiv img:hover{
+  height: 80px;
+}

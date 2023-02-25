@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://iambrocco.github.io/global/style.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://iambrocco.github.io/global/grids.css"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <title>Brottoli's Dashboard</title>
+  </head>
+  <body>
+    <div class="body">
+      <div id="login">
+        <a
+          href="https://discord.com/api/oauth2/authorize?client_id=930670275106844682&redirect_uri=https%3A%2F%2Fiambrocco.github.io%2FBrottoli%2Fdashboard&response_type=code&scope=identify%20guilds"
+        >
+          <span>Login With Discord to Access the Dashboard</span>
+        </a>
+      </div>
+      <div class="dash">
+        <div class="text-2xl">Welcome to the dashboard,</div>
+        <div>
+          <img src="" id="avatar" />
+          <div id="name"></div>
+        </div>
+        <a href="/docs/dashboard/">Logout</a>
+      </div>
+    </div>
+    <script>
+      window.onload = () => {
+        const fragment = new URLSearchParams(window.location.hash.slice(1));
+        const [accessToken, tokenType] = [
+          fragment.get("access_token"),
+          fragment.get("token_type"),
+        ];
+
+        if (!accessToken) {
+          window.location.href("/");
+          return (document.getElementById("login").style.display = "block");
+        }
+
+        fetch("https://discord.com/api/users/@me", {
+          headers: {
+            authorization: `${tokenType} ${accessToken}`,
+          },
+        })
+          .then((result) => result.json())
+          .then((response) => {
+            //handle response
+            document.getElementById("login").style.display = "none";
+            const { username, discriminator, avatar, id } = response;
+            //set the welcome username string
+            document.getElementById(
+              "name"
+            ).innerText = ` ${username}#${discriminator}`;
+
+            //set the avatar image by constructing a url to access discord's cdn
+            document.getElementById(
+              "avatar"
+            ).src = `https://cdn.discordapp.com/avatars/${id}/${avatar}.jpg`;
+          });
+        fetch("https://discord.com/api/users/@me/guilds", {
+          headers: {
+            authorization: `${tokenType} ${accessToken}`,
+          },
+        })
+          .then((result) => result.json())
+          .then((response) => {
+            //handle response
+            response.forEach((guild, index) => {
+              console.log(guild);
+              if (guild.owner == true) {
+                var guildDiv = document.createElement("div");
+                guildDiv.setAttribute("id", guild.id.toString());
+                guildDiv.setAttribute("class", "guildDiv");
+                if (guild.icon != null) {
+                  guildDiv.innerHTML = `<img src="https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.png" />`;
+                }
+                if (guild.icon == null) {
+                  guildDiv.innerHTML = `<a href="#">${guild.name}</a>`;
+                }
+                document.body.append(guildDiv);
+              }
+            });
+            // const { username, discriminator, avatar, id } = response;
+            // //set the welcome username string
+            // document.getElementById(
+            //   "name"
+            //   ).innerText = ` ${username}#${discriminator}`;
+
+            //   //set the avatar image by constructing a url to access discord's cdn
+            //   document.getElementById(
+            //     "avatar"
+            //     ).src = `https://cdn.discordapp.com/avatars/${id}/${avatar}.jpg`;
+          });
+        //     .catch(console.error);
+      };
+    </script>
+  </body>
+</html>

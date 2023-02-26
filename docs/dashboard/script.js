@@ -9,7 +9,7 @@ window.onload = () => {
     window.location.href("/dashboard");
     return (
       (document.getElementById("login").style.display = "flex"),
-      (document.getElementsByClassName("dash")[0].style.display = "none")
+      (document.getElementsByClassName("head")[0].style.display = "none")
     );
   }
 
@@ -21,7 +21,7 @@ window.onload = () => {
     .then((result) => result.json())
     .then((response) => {
       document.getElementById("login").style.display = "none";
-      document.getElementsByClassName("dash")[0].style.display = "flex";
+      document.getElementsByClassName("head")[0].style.display = "flex";
 
       const { username, discriminator, avatar, id } = response;
 

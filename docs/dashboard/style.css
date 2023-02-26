@@ -18,7 +18,7 @@ html, body{
     height: 50px;
 }
 
-.dash{
+.head .dash{
     height: 100%;
     width: 100%;
     display: none;

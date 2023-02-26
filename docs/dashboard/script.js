@@ -8,7 +8,7 @@ window.onload = () => {
   if (!accessToken) {
     window.location.href("/dashboard");
     return (
-      (document.getElementById("login").style.display = "block"),
+      (document.getElementById("login").style.display = "flex"),
       (document.getElementById("dash").style.display = "none")
     );
   }
@@ -22,7 +22,7 @@ window.onload = () => {
     .then((response) => {
    
       document.getElementById("login").style.display = "none";
-      document.getElementById("dash").style.display = "block";
+      document.getElementById("dash").style.display = "flex";
 
       const { username, discriminator, avatar, id } = response;
 
@@ -55,7 +55,7 @@ window.onload = () => {
           if (guild.icon == null) {
             guildDiv.innerHTML = `<a href="#">${guild.name}</a>`;
           }
-          document.getElementById("guilds").append(guildDiv);
+          document.getElementById("grid").append(guildDiv);
         }
       });
 

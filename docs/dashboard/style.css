@@ -17,20 +17,19 @@ html, body{
     border-radius: 30%;
     height: 50px;
 }
-
+.head{
+    display:none
+}
 .head .dash{
     height: 100%;
     width: 100%;
-    display: none;
-}
-.guildDiv img:hover{
-    height: 60px;
 
 }
+
 .guildDiv a#guildName{
     background-color: azure;
     margin-top: 5%;
-    padding: 5%;
+
 }
 .guildNameIndicator{
     color: aliceblue;

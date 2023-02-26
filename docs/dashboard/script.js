@@ -9,7 +9,7 @@ window.onload = () => {
     window.location.href("/dashboard");
     return (
       (document.getElementById("login").style.display = "flex"),
-      (document.getElementById("dash").style.display = "none")
+      (document.getElementsByClassName("dash")[0].style.display = "none")
     );
   }
 
@@ -20,16 +20,14 @@ window.onload = () => {
   })
     .then((result) => result.json())
     .then((response) => {
-   
       document.getElementById("login").style.display = "none";
-      document.getElementById("dash").style.display = "flex";
+      document.getElementsByClassName("dash")[0].style.display = "flex";
 
       const { username, discriminator, avatar, id } = response;
 
       document.getElementById(
         "name"
       ).innerText = ` ${username}#${discriminator}`;
-
 
       document.getElementById(
         "avatar"
@@ -50,16 +48,31 @@ window.onload = () => {
           guildDiv.setAttribute("id", guild.id.toString());
           guildDiv.setAttribute("class", "guildDiv");
           if (guild.icon != null) {
-            guildDiv.innerHTML = `<img src="https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.png" />`;
+            var guildIcon = document.createElement("img");
+            guildIcon.setAttribute("src", `https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.png`)
+            guildDiv.append(guildIcon)
           }
           if (guild.icon == null) {
-            guildDiv.innerHTML = `<a href="#">${guild.name}</a>`;
+            var myStr = guild.name;
+            var matches = myStr.match(/\b(\w)/g);
+            var a = document.createElement("a")
+            a.setAttribute("id", "guildName")
+            a.innerText = matches.join('')
+            guildDiv.append(a)
           }
-          document.getElementsByClassName("grid")[0].append(guildDiv);
+          var guildNameIndicator = document.createElement("div");
+          guildNameIndicator.setAttribute("class", "guildNameIndicator");
+          guildNameIndicator.innerHTML = `<a>${guild.name}</a>`;
+          guildDiv.append(guildNameIndicator);
+          guildDiv.onmouseenter = () => {
+            guildNameIndicator.style.display = "flex";
+          };
+          guildDiv.onmouseleave = () => {
+            guildNameIndicator.style.display = "none";
+          };
+          document.getElementsByClassName("guilds")[0].append(guildDiv);
         }
       });
-
-    }
-    )
+    })
     .catch(console.error);
 };

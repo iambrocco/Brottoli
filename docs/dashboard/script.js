@@ -55,7 +55,7 @@ window.onload = () => {
           if (guild.icon == null) {
             guildDiv.innerHTML = `<a href="#">${guild.name}</a>`;
           }
-          document.getElementById("grid").append(guildDiv);
+          document.getElementsByClassName("grid")[0].append(guildDiv);
         }
       });
 

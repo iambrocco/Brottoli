@@ -2,10 +2,15 @@
   "dependencies": {
     "@discordjs/builders": "^1.4.0",
     "@discordjs/rest": "^1.5.0",
+    "bad-words": "^3.0.4",
+    "brawlstars.js": "^1.2.3",
     "canvas": "^2.11.0",
+    "clash-of-clans-api": "^0.6.4",
+    "clash-royale-api": "^1.3.1",
     "discord.js": "^13.12.0",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
+    "lyrics-finder": "^21.7.0",
     "random-memes": "^3.1.7"
   },
   "name": "brottoli",

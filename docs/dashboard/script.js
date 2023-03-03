@@ -1,3 +1,6 @@
+var testX, testY;
+        testY = 0
+
 window.onload = () => {
   const fragment = new URLSearchParams(window.location.hash.slice(1));
   const [accessToken, tokenType] = [
@@ -44,6 +47,8 @@ window.onload = () => {
       response.forEach((guild, index) => {
         console.log(guild);
         if (guild.owner == true) {
+          var guildParent = document.createElement("div");
+          guildParent.setAttribute("class", "guildParent")
           var guildDiv = document.createElement("div");
           guildDiv.setAttribute("id", guild.id.toString());
           guildDiv.setAttribute("class", "guildDiv");
@@ -55,7 +60,7 @@ window.onload = () => {
           if (guild.icon == null) {
             var myStr = guild.name;
             var matches = myStr.match(/\b(\w)/g);
-            var a = document.createElement("a")
+            var a = document.createElement("div")
             a.setAttribute("id", "guildName")
             a.innerText = matches.join('')
             guildDiv.append(a)
@@ -63,14 +68,15 @@ window.onload = () => {
           var guildNameIndicator = document.createElement("div");
           guildNameIndicator.setAttribute("class", "guildNameIndicator");
           guildNameIndicator.innerHTML = `<a>${guild.name}</a>`;
-          guildDiv.append(guildNameIndicator);
           guildDiv.onmouseenter = () => {
-            guildNameIndicator.style.display = "flex";
+            guildNameIndicator.style.display = "inline-block";
           };
           guildDiv.onmouseleave = () => {
             guildNameIndicator.style.display = "none";
           };
-          document.getElementsByClassName("guilds")[0].append(guildDiv);
+          guildParent.append(guildDiv)
+          guildParent.append(guildNameIndicator);
+          document.getElementsByClassName("guilds")[0].append(guildParent);
         }
       });
     })

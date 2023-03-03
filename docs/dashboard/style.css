@@ -1,39 +1,73 @@
-html, body{
-    height: 100%;
-    width: 100%;
-}
-#avatar{
-    border-radius: 100%;
-}
-.body{
-    height: 100%;
-    width: 100%;
-}
-.guildDiv{
-   margin-top: 1%;
-}
-.guildDiv img{
-    border: 1px black solid;
-    border-radius: 30%;
-    height: 50px;
-}
-.head{
-    display:none
-}
-.head .dash{
-    height: 100%;
-    width: 100%;
-
+html,
+body {
+  height: 100%;
+  width: 100%;
 }
 
-.guildDiv a#guildName{
-    background-color: azure;
-    margin-top: 5%;
-
+#avatar {
+  border-radius: 100%;
 }
-.guildNameIndicator{
-    color: aliceblue;
-    background-color: blueviolet;
-    padding: 1%;
-    display: none;
+.head {
+  display: none;
+}
+.body {
+  height: 100%;
+  width: 100%;
+}
+.dash {
+  height: 100%;
+  width: 100%;
+}
+.guildParent {
+  display: flex;
+  flex-direction: row;
+  width: 25%;
+
+  align-items: center;
+  text-align: center;
+}
+
+.guildDiv {
+  color: azure;
+  margin-top: 1%;
+  width: 50px;
+  height: 50px;
+  border: 1px black solid;
+  border-radius: 30%;
+}
+.guildDiv img {
+  height: 100%;
+  border-radius: 30%;
+  width: 100%;
+}
+.guildDiv #guildName {
+  background-color: rgb(90, 90, 90);
+  display: flex;
+  height: 100%;
+  width: 100%;
+  border-radius: 30%;
+  font-size: 14px;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  vertical-align: middle;
+}
+.guildDiv:hover,
+.guildDiv *:hover {
+  border-radius: 20%;
+}
+.guildNameIndicator {
+  margin-left: 2%;
+  border-radius: 25px;
+  display: none;
+  max-width: 75%;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  vertical-align: middle;
+  width: 1fr;
+  height: fit-content;
+  padding: 7px;
+  background-color: rgb(84, 143, 120);
+  color: rgb(192, 221, 170);
 }

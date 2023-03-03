@@ -1,0 +1,44 @@
+.head {
+  height: 25%;
+}
+.body {
+  height: 70%;
+  display: inline-flex;
+}
+#commands {
+  text-align: center;
+  font-family: Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 75%;
+}
+
+#commands td,
+#commands th {
+  border: 1px solid rgb(165, 194, 128);
+  padding: 8px;
+  text-align: center;
+}
+#commands tr:nth-child(odd) {
+  color: rgb(113, 255, 137);
+  background-color: #1b6324;
+  text-align: center;
+}
+#commands tr:nth-child(even) {
+  color: rgb(36, 82, 44);
+  background-color: #72a767;
+}
+
+#commands tr:nth-child(even):hover {
+  background-color: #7cb671;
+}
+#commands tr:nth-child(odd):hover {
+  background-color: #154d1d;
+}
+
+#commands th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  background-color: #248d32;
+  color: rgb(187, 255, 191);
+  text-align: center;
+}

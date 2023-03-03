@@ -1,8 +1,4 @@
-.head div.user {
-  position: absolute;
-  top: 0;
-  left: 3%;
-}
+
 @media only screen and (max-width: 600px) {
   .grid {
     margin-top: 10%;

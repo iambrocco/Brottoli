@@ -1,6 +1,5 @@
-var testX, testY;
-        testY = 0
-
+var guildsDiv = document.getElementsByClassName("guilds")[0]
+var manageDivs = document.getElementsByClassName("manage")[0]
 window.onload = () => {
   const fragment = new URLSearchParams(window.location.hash.slice(1));
   const [accessToken, tokenType] = [
@@ -9,10 +8,11 @@ window.onload = () => {
   ];
 
   if (!accessToken) {
-    window.location.href("/dashboard");
+
     return (
       (document.getElementById("login").style.display = "flex"),
-      (document.getElementsByClassName("head")[0].style.display = "none")
+      (document.getElementsByClassName("head")[0].style.display = "none"),
+      (document.getElementsByClassName("dash")[0].style.display = "none")
     );
   }
 
@@ -25,6 +25,8 @@ window.onload = () => {
     .then((response) => {
       document.getElementById("login").style.display = "none";
       document.getElementsByClassName("head")[0].style.display = "flex";
+      document.getElementsByClassName("dash")[0].style.display = "block";
+      manageDivs.style.display = "flex";
 
       const { username, discriminator, avatar, id } = response;
 
@@ -48,22 +50,25 @@ window.onload = () => {
         console.log(guild);
         if (guild.owner == true) {
           var guildParent = document.createElement("div");
-          guildParent.setAttribute("class", "guildParent")
+          guildParent.setAttribute("class", "guildParent");
           var guildDiv = document.createElement("div");
           guildDiv.setAttribute("id", guild.id.toString());
           guildDiv.setAttribute("class", "guildDiv");
           if (guild.icon != null) {
             var guildIcon = document.createElement("img");
-            guildIcon.setAttribute("src", `https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.png`)
-            guildDiv.append(guildIcon)
+            guildIcon.setAttribute(
+              "src",
+              `https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.png`
+            );
+            guildDiv.append(guildIcon);
           }
           if (guild.icon == null) {
             var myStr = guild.name;
             var matches = myStr.match(/\b(\w)/g);
-            var a = document.createElement("div")
-            a.setAttribute("id", "guildName")
-            a.innerText = matches.join('')
-            guildDiv.append(a)
+            var a = document.createElement("div");
+            a.setAttribute("id", "guildName");
+            a.innerText = matches.join("");
+            guildDiv.append(a);
           }
           var guildNameIndicator = document.createElement("div");
           guildNameIndicator.setAttribute("class", "guildNameIndicator");
@@ -74,11 +79,20 @@ window.onload = () => {
           guildDiv.onmouseleave = () => {
             guildNameIndicator.style.display = "none";
           };
-          guildParent.append(guildDiv)
+          guildParent.append(guildDiv);
           guildParent.append(guildNameIndicator);
-          document.getElementsByClassName("guilds")[0].append(guildParent);
+          guildsDiv.append(guildParent);
         }
       });
     })
     .catch(console.error);
 };
+var manageBtn = document.getElementsByClassName("btn");
+
+var global = manageBtn.item(0);
+var specific = manageBtn.item(1);
+
+specific.onclick = () => {
+  guildsDiv.style.display = "block"
+  manageDivs.style.display = "none"
+}

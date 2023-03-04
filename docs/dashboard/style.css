@@ -3,7 +3,12 @@ body {
   height: 100%;
   width: 100%;
 }
-
+#login{
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  vertical-align: middle;
+}
 #avatar {
   border-radius: 100%;
 }
@@ -15,14 +20,17 @@ body {
   width: 100%;
 }
 .dash {
+  display: none;
   height: 100%;
   width: 100%;
+}
+.guilds {
+  display: none;
 }
 .guildParent {
   display: flex;
   flex-direction: row;
   width: 25%;
-
   align-items: center;
   text-align: center;
 }
@@ -32,12 +40,11 @@ body {
   margin-top: 1%;
   width: 50px;
   height: 50px;
-  border: 1px black solid;
-  border-radius: 30%;
+  filter: drop-shadow(2px 4px 6px #0005);
 }
 .guildDiv img {
   height: 100%;
-  border-radius: 30%;
+  border-radius: 20%;
   width: 100%;
 }
 .guildDiv #guildName {
@@ -45,29 +52,53 @@ body {
   display: flex;
   height: 100%;
   width: 100%;
-  border-radius: 30%;
+  border-radius: 20%;
   font-size: 14px;
   align-items: center;
   justify-content: center;
   text-align: center;
   vertical-align: middle;
 }
-.guildDiv:hover,
-.guildDiv *:hover {
-  border-radius: 20%;
-}
+
 .guildNameIndicator {
   margin-left: 2%;
-  border-radius: 25px;
+  border-radius: 3px;
+  box-shadow: 2px 4px 6px #0005;
   display: none;
   max-width: 75%;
+  max-height: 20%;
   align-items: center;
   justify-content: center;
   text-align: center;
   vertical-align: middle;
   width: 1fr;
   height: fit-content;
-  padding: 7px;
+  padding: 6px;
   background-color: rgb(84, 143, 120);
   color: rgb(192, 221, 170);
+}
+.manage {
+  display: none;
+  height: 20%;
+  width: 100%;
+  justify-content: center;
+  text-align: center;
+}
+.manage div {
+  margin: 2%;
+  height: 100%;
+  width: 25%;
+  background-color: rgba(66, 124, 64, 0.808);
+  color: rgb(0, 179, 104);
+}
+.manage div div.btn {
+  display: flex;
+  position: relative;
+  justify-content: center;
+  text-align: center;
+  bottom: 1%;
+  height: 25%;
+  width: 95%;
+  top: 30%;
+  background-color: rgb(57, 71, 28);
 }

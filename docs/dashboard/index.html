@@ -17,25 +17,39 @@
   </head>
   <body>
     <div class="head">
-       <h3>Welcome to the dashboard,</h3>
-    <div>
-      <img src="" id="avatar" />
-      <div id="name"></div>
-    </div>
-    <a href="./">Logout</a>
+      <h3>Welcome to the dashboard,</h3>
+      <div>
+        <img src="" id="avatar" />
+        <div id="name"></div>
+      </div>
+      <a href="./">Logout</a>
     </div>
     <div class="body">
       <div id="login">
-        <a
-          href="https://discord.com/api/oauth2/authorize?client_id=930670275106844682&redirect_uri=https%3A%2F%2Fiambrocco.github.io%2FBrottoli%2Fdashboard&response_type=token&scope=identify%20guilds"
-        >
-          <span>Login With Discord to Access the Dashboard</span>
-        </a>
+
+          <a
+            href="https://discord.com/api/oauth2/authorize?client_id=930670275106844682&redirect_uri=https%3A%2F%2Fiambrocco.github.io%2FBrottoli%2Fdashboard&response_type=token&scope=identify%20guilds"
+          >
+            <span>Login With Discord to Access the Dashboard</span>
+          </a>
+
       </div>
       <div class="dash">
-       
         <div class="guilds">
-          
+          <div class="text"><h3>1. Select a guild/server to manage:</h3></div>
+          <br />
+        </div>
+        <div class="manage">
+          <div class="self">
+            <h3>Self Options</h3>
+            <h5>Your Global Preferences</h5>
+            <div id="global" class="btn">Manage</div>
+          </div>
+          <div class="guildOptions">
+            <h3>Guild Options</h3>
+            <h5>Your Guild-Specific Preferences</h5>
+            <div id="specific" class="btn">Manage</div>
+          </div>
         </div>
       </div>
     </div>

@@ -1,23 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./style.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./style.css" />
     <title>Brottoli's Page</title>
-</head>
-<body>
-    <div class="HeaderNav">
-        <div class="Home"><a href="#Intro">Back To Top</a></div>
-        <div class="features">Features</div>
-        <div class="source">Source Code</div>
-    </div>
+  </head>
+  <body>
     <div class="Body">
-        <div id="Intro" class="Intro"></div>
-        <div id="Features" class="Features"></div>
-        <div id="Source" class="Source"></div>
+      <div class="Main" id="Main">
+        <h1>Brottoli</h1>
+        <h2>The All-in-One Discord™ Bot</h2>
+        <button
+          class="inviteButton"
+          onclick="(() => {window.open('https://top.gg/bot/930670275106844682')})()"
+        >
+          Invite Me To Your Server
+        </button>
+        <div class="buttonsRow">
+          <button onclick="(() => {window.location.href = ('#Intro')})()">
+            About
+          </button>
+          <button onclick="(() => {window.location.href = ('#Features')})()">
+            Features
+          </button>
+          <button onclick="(() => {window.location.href = ('#Source')})()">
+            Source Code
+          </button>
+        </div>
+      </div>
+      <div id="Intro" class="Intro">
+        <div class="left">
+          <img class="BrottoliPFP" src="./Broccoli PFP.png" alt="" />
+        </div>
+        <div class="right">
+          <h3 style="margin-top: 1.5%">Brottoli</h3>
+          <p style="margin-right: 5%">
+            Brottoli is an
+            <a target="_blank" href="https://github.com/iambrocco/Brottoli"
+              >Open-Source</a
+            >
+            discord bot, Made by
+            <a target="_blank" href="https://youtube.com/@iambrocco"
+              >IamBrocco</a
+            >
+          </p>
+          <p style="margin-right: 5%">
+            It has a Lot of <a></a> Features, including moderation,
+            miscellanous, and gaming related commands
+          </p>
+          <p style="margin-right: 5%">
+            Click Here to
+            <a target="_blank" href="https://top.gg/bot/930670275106844682"
+              >Invite Brottoli to Your Server</a
+            >
+          </p>
+        </div>
+      </div>
+      <div id="Features" class="Features">
+        <div class="left">
+          <h3>Brottoli's Features</h3>
+          <ul>
+            <li>Moderation Commands</li>
+            <li>Fun Commands</li>
+            <li>Levelling Sytem!</li>
+            <li>Reaction Roles</li>
+            <li>All Features are Free!</li>
+            <li>Open-Source!</li>
+            <li>And More!!</li>
+          </ul>
+        </div>
+        <div class="right"><img src="" alt="" /></div>
+      </div>
+      <div id="Source" class="Source">
+        <div class="left"><img src="" alt="" /></div>
+        <div class="right">
+          <h3>Brottoli's Source Code</h3>
+          <p>
+            You can find Brottoli's Source Code
+            <a href="https://github.com/iambrocco/Brottoli"
+              >here at Github.com</a
+            >
+          </p>
+        </div>
+      </div>
     </div>
-    <div class="Footer"></div>
     <script src="./index.js"></script>
-</body>
+  </body>
 </html>

@@ -79,7 +79,7 @@ button.inviteButton {
   height: 50%;
   background: linear-gradient(#303036, #2e2c35);
 }
-img {
+img.BrottoliPFP {
   justify-self: center;
   align-self: center;
   border-radius: 25%;
@@ -113,4 +113,11 @@ img {
 li {
     list-style:inside;
     font-size: larger;
+}
+#git {
+  justify-self: center;
+  align-self: center;
+  border-radius: 25%;
+  margin-left: 25%;
+  width: 35%;
 }

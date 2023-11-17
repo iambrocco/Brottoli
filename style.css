@@ -6,15 +6,22 @@
 * ::-webkit-scrollbar {
   display: none;
 }
+:root {
+  --main-bg: #1d782b;
+  --intro-bg: #174324;
+  --features-bg: #11331b;
+  --source-bg: #0f2816;
+
+}
 html,
 body {
   color: rgb(174, 206, 218);
   width: 100%;
   height: 100%;
-  background-color: #444952;
+  background: var(--main-bg);
 }
 .Main {
-  background: linear-gradient(#677183, #303036);
+  background: linear-gradient(var(--main-bg), var(--intro-bg));
   display: flex;
   flex-direction: column;
   text-align: center;
@@ -77,7 +84,7 @@ button.inviteButton {
   display: flex;
   flex-direction: row;
   height: 50%;
-  background: linear-gradient(#303036, #2e2c35);
+  background: linear-gradient(var(--intro-bg), var(--features-bg));
 }
 img.BrottoliPFP {
   justify-self: center;
@@ -100,13 +107,28 @@ img.BrottoliPFP {
   width: 50%;
 }
 .Features {
-  display: flex;
-  height: 50%;
-  background: linear-gradient(#2e2c35, #292533);
+  height: 75%;
+  width: 100%;
+  justify-items: center;
+  align-items: center;
+  text-align: center;
+  justify-self: center;
+  background: linear-gradient(var(--features-bg), var(--source-bg));
+
+}
+.FeaturesBody{
+  display: grid;
+  grid-template-areas: "a b c";
+  vertical-align: middle;
+  text-align: center;
+  height: 75%;
+  width: 100%;
+  justify-items: center;
+  background: linear-gradient(var(--features-bg), var(--source-bg));
 }
 .Source {
   height: 50%;
-  background-color: #292533;
+  background: linear-gradient(var(--source-bg), var(--features-bg));
 }
 .Footer {
 }

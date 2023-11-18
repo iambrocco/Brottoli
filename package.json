@@ -10,7 +10,8 @@
   "description": "Discord Bot Template Made by IamBrocco",
   "main": "src/index.js",
   "scripts": {
-    "test": "nodemon src/index.js"
+    "test": "node src/index.js",
+    "start": "node src/index.js"
   },
   "keywords": [
     "Discord",

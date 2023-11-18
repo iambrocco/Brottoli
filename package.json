@@ -14,6 +14,9 @@
     "test": "node src/index.js",
     "start": "node src/index.js"
   },
+  "engines": {
+    "node": ">=16.9"
+  },
   "keywords": [
     "Discord",
     "Bot",

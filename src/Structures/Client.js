@@ -18,7 +18,6 @@ class Client extends discord.Client {
         folderPath: "./Commands",
         executeFN: (commandFile) => {
           this.Commands.set(commandFile.data.name, commandFile);
-          
         },
       },
       ev: {
@@ -88,9 +87,8 @@ class Client extends discord.Client {
         });
     })();
   }
-  setCommandCategories()
-  {
-    let groupedCommands = {}
+  setCommandCategories() {
+    let groupedCommands = {};
     this.Commands.forEach((command) => {
       const category = command.data.category;
       if (groupedCommands[category]) {
@@ -106,7 +104,7 @@ class Client extends discord.Client {
       const commands = groupedCommands[category].sort((a, b) =>
         a.data.name.localeCompare(b.data.name)
       );
-      
+
       this.CommandCategories.set(category, commands);
     }
   }
@@ -115,7 +113,7 @@ class Client extends discord.Client {
     this.loadFunctionFiles("ev");
     this.loadFunctionFiles("cmd");
     this.refreshCommands(token);
-    this.setCommandCategories()
+    this.setCommandCategories();
     this.login(token);
   }
 }

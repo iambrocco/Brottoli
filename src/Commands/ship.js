@@ -93,7 +93,6 @@ module.exports = {
     async function bothDiscord() {
       // Defer the initial reply
       await interaction.deferReply();
-
       let otherUser = interaction.guild.members.cache.randomKey();
       async function chooseNewUser(user, otherUser) {
         const otherUserName =

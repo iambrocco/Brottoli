@@ -3,14 +3,19 @@
     "canvas": "^2.11.2",
     "discord.js": "^14.13.0",
     "dotenv": "^16.3.1",
-    "ms": "^2.1.3"
+    "ms": "^2.1.3",
+    "express": "^4.18.1"
   },
   "name": "newbottemplate",
   "version": "1.0.1",
   "description": "Discord Bot Template Made by IamBrocco",
   "main": "src/index.js",
   "scripts": {
-    "test": "nodemon src/index.js"
+    "test": "node src/index.js",
+    "start": "node src/index.js"
+  },
+  "engines": {
+    "node": ">=16.9"
   },
   "keywords": [
     "Discord",

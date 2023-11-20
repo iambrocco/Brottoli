@@ -1,5 +1,7 @@
 const CommandBuilder = require("../Structures/CommandBuilder");
 const { EmbedBuilder } = require("discord.js");
+const { namedColors } = require("color-name-list");
+
 module.exports = {
   data: new CommandBuilder()
     .setName("color")
@@ -10,6 +12,8 @@ module.exports = {
     .setCategory("Miscellaneous")
     .setType("slash"),
   async execute(interaction, args) {
+    await interaction.deferReply();
+
     let color = interaction.options.getString("color");
     let colorEmbed = new EmbedBuilder();
     let generatedColor = color ?? generateRGB();
@@ -30,7 +34,6 @@ module.exports = {
       let b = Math.ceil(Math.random() * 255);
       return `rgb(${r}, ${g}, ${b})`;
     }
-    interaction.deferReply();
     await interaction.editReply({
       embeds: [
         colorEmbed

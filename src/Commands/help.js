@@ -15,8 +15,8 @@ module.exports = {
     .setType("BOTH"),
   async execute(interaction, args) {
     let commandName = interaction.content
-      ? args[1]
-      : interaction.options.getString("command");
+      ? args[1].toLowerCase()
+      : interaction.options.getString("command").toLowerCase();
 
     if (!commandName) {
       const helpEmbed = new EmbedBuilder()

@@ -34,9 +34,13 @@
     height: 75%;
     position: relative;
 }
+.widget.main > img {
+    height: 62%;
+    transition: all 1s;
+}
 .widget > img {
     margin-top: 5%;
-    height: 75%;
+    height: 60%;
 }
 .move.a, .move.c {
     font-size: large;

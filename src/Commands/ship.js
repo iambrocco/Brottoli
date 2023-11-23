@@ -127,23 +127,33 @@ module.exports = {
 
       chooseNewUser(interaction.user, otherUser);
     }
-    function singleDiscord() {
+    async function getUser(user) {
+      if (user.startsWith("<@")) {
+        let userId = user.replace("<@", "").replace(">", "");
+        return await interaction.client.users.fetch(userId);
+      } else {
+        return {
+          username: user,
+        };
+      }
+    }
+    async function singleDiscord() {
       /**
        * @type {String}
        */
       let otherUser = namesArray[0];
-      otherUser.endsWith(">") && otherUser.startsWith("<@") ? (() => {otherUser = interaction.client.users.cache.get(otherUser.replace("<@", "").replace(">", "")).username})() : ""
+      otherUser = (await getUser(otherUser)).username;
       let shipName = generateShipName(interaction.user.username, otherUser);
       interaction.reply({
         content: `${shipName.titleMessage}`,
         embeds: [shipName.shipEmbed],
       });
     }
-    function bothNotDiscord() {
-      let firstUser = namesArray[0]
+    async function bothNotDiscord() {
+      let firstUser = namesArray[0];
       let otherUser = namesArray[1];
-      otherUser.endsWith(">") && otherUser.startsWith("<@") ? (() => {otherUser = interaction.client.users.cache.get(otherUser.replace("<@", "").replace(">", "")).username})() : ""
-      firstUser.endsWith(">") && firstUser.startsWith("<@") ? (() => {firstUser = interaction.client.users.cache.get(firstUser.replace("<@", "").replace(">", "")).username})() : ""
+      firstUser = (await getUser(firstUser)).username;
+      otherUser = (await getUser(otherUser)).username;
 
       let shipName = generateShipName(firstUser, otherUser);
       interaction.reply({
@@ -151,15 +161,15 @@ module.exports = {
         embeds: [shipName.shipEmbed],
       });
     }
-    function checkCommandType() {
+    async function checkCommandType() {
       namesArray.length == 0
-        ? bothDiscord()
+        ? await bothDiscord()
         : namesArray.length == 1
-        ? singleDiscord()
+        ? await singleDiscord()
         : namesArray.length == 2
-        ? bothNotDiscord()
+        ? await bothNotDiscord()
         : bothDiscord();
     }
-    checkCommandType();
+    await checkCommandType();
   },
 };

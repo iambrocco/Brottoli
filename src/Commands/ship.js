@@ -128,7 +128,11 @@ module.exports = {
       chooseNewUser(interaction.user, otherUser);
     }
     function singleDiscord() {
+      /**
+       * @type {String}
+       */
       let otherUser = namesArray[0];
+      otherUser.endsWith(">") && otherUser.startsWith("<@") ? (() => {otherUser = interaction.client.users.cache.get(otherUser.replace("<@", "").replace(">", "")).username})() : ""
       let shipName = generateShipName(interaction.user.username, otherUser);
       interaction.reply({
         content: `${shipName.titleMessage}`,
@@ -136,8 +140,12 @@ module.exports = {
       });
     }
     function bothNotDiscord() {
+      let firstUser = namesArray[0]
       let otherUser = namesArray[1];
-      let shipName = generateShipName(namesArray[0], otherUser);
+      otherUser.endsWith(">") && otherUser.startsWith("<@") ? (() => {otherUser = interaction.client.users.cache.get(otherUser.replace("<@", "").replace(">", "")).username})() : ""
+      firstUser.endsWith(">") && firstUser.startsWith("<@") ? (() => {firstUser = interaction.client.users.cache.get(firstUser.replace("<@", "").replace(">", "")).username})() : ""
+
+      let shipName = generateShipName(firstUser, otherUser);
       interaction.reply({
         content: `${shipName.titleMessage}`,
         embeds: [shipName.shipEmbed],

@@ -114,7 +114,9 @@ class Client extends discord.Client {
     this.loadFunctionFiles("cmd");
     this.refreshCommands(token);
     this.setCommandCategories();
-    this.login(token);
+    this.login(token).catch((err) => {
+      console.log(err);
+    });
   }
 }
 module.exports = Client;

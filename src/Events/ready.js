@@ -10,7 +10,6 @@ module.exports = {
   async execute(client) {
     console.log(`${client.user.tag} is ready!`);
     let customStatusChannelId = "1177592660278640701";
-    setInterval(async () => {
       let lastMessageId = client.channels.cache.get(
         customStatusChannelId
       ).lastMessageId;
@@ -20,8 +19,7 @@ module.exports = {
           .messages.fetch(lastMessageId)
       ).content;
       client.user.setPresence({
-        activities: [{ name: `${customStatus}`, type: ActivityType.Custom }],
+        activities: [{ name: `/help`, type: ActivityType.Playing }],
       });
-    }, 5000);
   },
 };

@@ -9,8 +9,8 @@ module.exports = {
    */
   async execute(client) {
     console.log(`${client.user.tag} is ready!`);
+    let customStatusChannelId = "1177592660278640701";
     setInterval(async () => {
-      let customStatusChannelId = "1177592660278640701";
       let lastMessageId = client.channels.cache.get(
         customStatusChannelId
       ).lastMessageId;

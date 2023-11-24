@@ -9,7 +9,9 @@ module.exports = {
      */
     async execute(client) {
         console.log(`${client.user.tag} is ready!`);
-        
-        client.user.setPresence({activities: [{name: "/help | New Commands Are Crazy!", type: ActivityType.Custom}]})
+        let customStatusChannelId = "1177592660278640701"
+        let lastMessageId = client.channels.cache.get(customStatusChannelId).lastMessageId
+        let customStatus = (await client.channels.cache.get(customStatusChannelId).messages.fetch(lastMessageId)).content
+        client.user.setPresence({activities: [{name: `${customStatus}`, type: ActivityType.Custom}]})
     }
 }

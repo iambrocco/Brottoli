@@ -97,33 +97,34 @@ module.exports = {
         await interaction.showModal(modal);
       }
       if (interaction.options.getSubcommand() === "icons") {
-        var commandsEmbed1 = new EmbedBuilder()
+        let currentEmbed = 1;
+        var firstIconsEmbed = new EmbedBuilder()
           .setTitle("Achievement Command Icon List 1/3")
           .setColor(Colors.DarkButNotBlack);
-        var commandsEmbed2 = new EmbedBuilder()
+        var secondIconsEmbed = new EmbedBuilder()
           .setTitle("Achievement Command Icon List 2/3")
           .setColor(Colors.DarkButNotBlack);
-        var commandsEmbed3 = new EmbedBuilder()
+        var thirdIconsEmbed = new EmbedBuilder()
           .setTitle("Achievement Command Icon List 3/3")
           .setColor(Colors.DarkButNotBlack);
 
         Icons.forEach((icon, i) => {
           if (i <= 12) {
-            commandsEmbed1.addFields({
+            firstIconsEmbed.addFields({
               name: `Icon ${i + 1}`,
               value: `${icon}`,
               inline: true,
             });
           }
           if (i <= 25 && i > 12) {
-            commandsEmbed2.addFields({
+            secondIconsEmbed.addFields({
               name: `Icon ${i + 1}`,
               value: `${icon}`,
               inline: true,
             });
           }
           if (i <= 38 && i > 12 && i > 25) {
-            commandsEmbed3.addFields({
+            thirdIconsEmbed.addFields({
               name: `Icon ${i + 1}`,
               value: `${icon}`,
               inline: true,
@@ -131,7 +132,7 @@ module.exports = {
           }
         });
         await interaction.reply({
-          embeds: [commandsEmbed1, commandsEmbed2, commandsEmbed3],
+          embeds: [firstIconsEmbed, secondIconsEmbed, thirdIconsEmbed],
           ephemeral: true,
         });
       }
@@ -163,6 +164,5 @@ module.exports = {
       });
       await interaction.reply({ embeds: [killEmbed] });
     }
-
   },
 };

@@ -6,7 +6,6 @@ const port = 3000;
 const client = new Client({
   intents: ["GuildMessages", "GuildMembers", "MessageContent", "Guilds"],
 });
-
 client.start(process.env.token);
 
 app.get("/", (req, res) => {

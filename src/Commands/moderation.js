@@ -9,6 +9,17 @@ module.exports = {
     .setCategory("Moderation")
     .addSubcommand((subcommand) =>
       subcommand
+        .setName("purge")
+        .setDescription("Delete a Number of Message")
+        .addNumberOption((option) =>
+          option
+            .setName("amount")
+            .setDescription("The Amount of messages you want to delete")
+            .setRequired(true)
+        )
+    )
+    .addSubcommand((subcommand) =>
+      subcommand
         .setName("kick")
         .setDescription("Kick a Member")
         .addMentionableOption((option) =>
@@ -298,6 +309,32 @@ module.exports = {
               });
             interaction.reply({ embeds: [feedBackEmbed] });
           })()
+      : subCommand == "purge"
+      ? (async () => {
+          let amount = interaction.options.getNumber("amount");
+          async function purge(amount) {
+            await interaction.channel.bulkDelete(amount, true).then(async () => {
+              await interaction
+                .reply(`Successfully Deleted ${amount} messages`)
+                .then((message) => {
+                  setTimeout(() => {
+                    message.delete();
+                  }, 2500);
+                });
+              await interaction.followUp({
+                content: `Messages Older than 14 days can't be deleted by Bots because of Discord's API Limit.`,
+                ephemeral: true,
+              });
+            });
+          }
+          amount
+            ? amount <= 0 || amount > 100
+              ? interaction.reply(
+                  "Please Provide a Value Larger than 0 and Less Than 100"
+                )
+              : await purge(amount)
+            : interaction.reply("Please Provide a Value");
+        })()
       : interaction.reply("Unimplemented Subcommand!");
   },
 };

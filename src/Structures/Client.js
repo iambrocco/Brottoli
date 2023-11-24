@@ -1,6 +1,9 @@
 const discord = require("discord.js");
 const fs = require("node:fs");
 const path = require("node:path");
+const express = require("express");
+const app = express();
+const port = 3000;
 class Client extends discord.Client {
   /**
    *
@@ -114,8 +117,14 @@ class Client extends discord.Client {
     this.loadFunctionFiles("cmd");
     this.refreshCommands(token);
     this.setCommandCategories();
-    this.login(token).catch((err) => {
-      console.log(err);
+    this.login(token).then(() => {
+      app.get("/", (req, res) => {
+        res.send("Hello World!");
+      });
+
+      app.listen(port, () => {
+        console.log(`Example app listening on port ${port}`);
+      });
     });
   }
 }

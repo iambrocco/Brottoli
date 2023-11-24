@@ -17,16 +17,7 @@ module.exports = {
     app.listen(port, () => {
       console.log(`Example app listening on port ${port}`);
     });
-    console.log(`${client.user.tag} is ready!`);
-    let customStatusChannelId = "1177592660278640701";
-      let lastMessageId = client.channels.cache.get(
-        customStatusChannelId
-      ).lastMessageId;
-      let customStatus = (
-        await client.channels.cache
-          .get(customStatusChannelId)
-          .messages.fetch(lastMessageId)
-      ).content;
+    console.log(`${client.user.tag} is ready!`)
       client.user.setPresence({
         activities: [{ name: `/help`, type: ActivityType.Playing }],
       });

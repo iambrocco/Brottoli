@@ -33,22 +33,25 @@ module.exports = {
       : [];
 
     async function ship({ user1, user2 }) {
-      await interaction.deferReply()
+      await interaction.deferReply();
 
       async function checkUser(userResolvable) {
-        let user = `<@${userResolvable.id ?? userResolvable}>`;
-        if (user.startsWith("<@")) {
-          let userId = user.replace("<@", "").replace(">", "");
-          if (
-            userId.length <= 19 &&
-            userId.length >= 18 &&
-            !isNaN(parseInt(userId))
-          ) {
+        let user = `${userResolvable}`;
+        let userId = user.replace("<@", "").replace(">", "");
+        if (
+          userId.length <= 19 &&
+          userId.length >= 18 &&
+          !isNaN(parseInt(userId))
+        ) {
+          try {
             return await interaction.client.users.fetch(userId);
-          } else {
-            await interaction.editReply(
-              `Please Provide a Valid User \`/ship names: User1, User2\``
-            );
+          } catch {
+            return {
+              username: user,
+              avatarURL: ({ extension, size }) => {
+                return "https://i.imgur.com/p8oEVeT.png";
+              },
+            };
           }
         } else {
           return {
@@ -148,6 +151,8 @@ module.exports = {
         shipRateEmojis: shipRateEmojis,
         shipRateDescription: shipRateDescription,
         shipTitle: `💗 **MATCHING** 💗\n🔻\`${userOne.username}\`\n🔺\`${userTwo.username}\``,
+        shipUserOne: userOne,
+        shipUserTwo: userTwo,
       };
     }
     async function bothDiscord() {
@@ -170,14 +175,14 @@ module.exports = {
       let otherUser = await chooseNewUser(interaction.user, otherUserID);
 
       return {
-        userOne: interaction.user,
-        userTwo: otherUser,
+        userOne: interaction.user.id,
+        userTwo: otherUser.id,
       };
     }
 
     function singleDiscord() {
       return {
-        userOne: interaction.user,
+        userOne: interaction.user.id,
         userTwo: namesArray[0],
       };
     }
@@ -205,26 +210,29 @@ module.exports = {
           })();
     }
     let users = await checkCommandType();
-    ship({ user1: users.userOne, user2: users.userTwo }).then(async (shipResults) => {
-      let shipEmbed = new EmbedBuilder()
-        .setTitle(`🔀 ${shipResults.shipName}`)
-        .addFields({
-          value: `** **`,
-          name: `${shipResults.shipRate}% ${shipResults.shipRateEmojis} ${shipResults.shipRateDescription}`,
-        })
-        .setImage("attachment://shipImage.png");
-      await interaction.editReply({
-        content: `${shipResults.shipTitle}`,
-        embeds: [shipEmbed],
-        files: [
-          {
-            name: "shipImage.png",
-            attachment: shipResults.shipImage,
-          },
-        ],
+    ship({ user1: users.userOne, user2: users.userTwo })
+      .then(async (shipResults) => {
+        let shipEmbed = new EmbedBuilder()
+          .setTitle(`🔀 ${shipResults.shipName}`)
+          .addFields({
+            value: `** **`,
+            name: `${shipResults.shipRate}% ${shipResults.shipRateEmojis} ${shipResults.shipRateDescription}`,
+          })
+          .setImage("attachment://shipImage.png");
+        await interaction.editReply({
+          content: `${shipResults.shipTitle}`,
+          embeds: [shipEmbed],
+          files: [
+            {
+              name: "shipImage.png",
+              attachment: shipResults.shipImage,
+            },
+          ],
+        });
+      })
+      .catch((error) => {
+        interaction.editReply("An Error Occured");
+        console.log(error);
       });
-    }).catch(error => {
-      interaction.editReply("An Error Occured")
-    });
   },
 };

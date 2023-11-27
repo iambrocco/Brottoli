@@ -33,6 +33,8 @@ module.exports = {
       : [];
 
     async function ship({ user1, user2 }) {
+      await interaction.deferReply()
+
       async function checkUser(userResolvable) {
         let user = `<@${userResolvable.id ?? userResolvable}>`;
         if (user.startsWith("<@")) {
@@ -58,7 +60,6 @@ module.exports = {
         }
       }
       async function generateImage(firstPFP, SecondPFP) {
-        await interaction.deferReply()
         SecondPFP = SecondPFP ?? "https://i.imgur.com/p8oEVeT.png";
         const canvasImport = require("canvas");
         let canvas = canvasImport.createCanvas(600, 300);
@@ -222,6 +223,8 @@ module.exports = {
           },
         ],
       });
+    }).catch(error => {
+      interaction.editReply("An Error Occured")
     });
   },
 };

@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@supabase/supabase-js": "^2.38.5",
     "canvas": "^2.11.2",
     "color-name-list": "^10.16.0",
     "discord.js": "^14.13.0",

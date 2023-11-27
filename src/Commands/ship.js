@@ -4,6 +4,7 @@ const {
   codeBlock,
   inlineCode,
   bold,
+  User,
 } = require("discord.js");
 const CommandBuilder = require("../Structures/CommandBuilder");
 module.exports = {
@@ -23,28 +24,6 @@ module.exports = {
    * @param {*} args
    */
   async execute(interaction, args) {
-    async function generateImage(firstPFP, SecondPFP) {
-      SecondPFP = SecondPFP ?? firstPFP;
-      const canvasImport = require("canvas");
-      let canvas = canvasImport.createCanvas(600, 300);
-      let ctx = canvas.getContext("2d");
-      canvasImport.registerFont("./src/Data/Twemoji.ttf", {
-        family: "Twemoji",
-      });
-      ctx.font = "100px Twemoji";
-      ctx.fillStyle = "red";
-      const [imga, imgb] = await Promise.all([
-        canvasImport.loadImage(firstPFP),
-        canvasImport.loadImage(SecondPFP),
-      ]);
-      ctx.drawImage(imga, 10, 30); // Adjust the coordinates as needed
-      ctx.drawImage(imgb, 350, 30); // Adjust the coordinates as needed
-      ctx.fillText("❤️", 240, 160);
-
-      const buffer = canvas.toBuffer("image/png");
-
-      return buffer;
-    }
     let namesOption = interaction.options.getString("names");
     let namesArray = namesOption
       ? namesOption
@@ -52,11 +31,58 @@ module.exports = {
           .split(",")
           .map((name) => name.trim())
       : [];
-    function generateShipName(name1, name2) {
-      let shipRate = Math.ceil(Math.random() * 100);
-      let emptyEmoji = "⬛";
-      let fullEmoji = "🟩";
+
+    async function ship({ user1, user2 }) {
+      async function checkUser(userResolvable) {
+        let user = `<@${userResolvable.id ?? userResolvable}>`;
+        if (user.startsWith("<@")) {
+          let userId = user.replace("<@", "").replace(">", "");
+          if (
+            userId.length <= 19 &&
+            userId.length >= 18 &&
+            !isNaN(parseInt(userId))
+          ) {
+            return await interaction.client.users.fetch(userId);
+          } else {
+            await interaction.editReply(
+              `Please Provide a Valid User \`/ship names: User1, User2\``
+            );
+          }
+        } else {
+          return {
+            username: user,
+            avatarURL: ({ extension, size }) => {
+              return "https://i.imgur.com/p8oEVeT.png";
+            },
+          };
+        }
+      }
+      async function generateImage(firstPFP, SecondPFP) {
+        await interaction.deferReply()
+        SecondPFP = SecondPFP ?? "https://i.imgur.com/p8oEVeT.png";
+        const canvasImport = require("canvas");
+        let canvas = canvasImport.createCanvas(600, 300);
+        let ctx = canvas.getContext("2d");
+        canvasImport.registerFont("./src/Data/Twemoji.ttf", {
+          family: "Twemoji",
+        });
+        ctx.font = "100px Twemoji";
+        ctx.fillStyle = "red";
+        const [imga, imgb] = await Promise.all([
+          canvasImport.loadImage(firstPFP),
+          canvasImport.loadImage(SecondPFP),
+        ]);
+        ctx.drawImage(imga, 10, 30, 256, 256); // Adjust the coordinates as needed
+        ctx.drawImage(imgb, 350, 30, 256, 256); // Adjust the coordinates as needed
+        ctx.fillText("❤️", 240, 160);
+
+        const buffer = canvas.toBuffer("image/png");
+
+        return buffer;
+      }
       function generateEmoji(rate) {
+        let emptyEmoji = "⬛";
+        let fullEmoji = "🟩";
         let fullEmojiCount = Math.floor(rate / 10);
         let emojis = "";
         for (let i = 0; i < fullEmojiCount; i++) {
@@ -67,109 +93,135 @@ module.exports = {
         }
         return emojis;
       }
-      let newShipName =
-        name1.substring(0, Math.floor(name1.length / 2)) +
-        name2.substring(Math.floor(name2.length / 2));
-      let addition = `${codeBlock(`${name1} loves ${name2} ${shipRate}%`)}`;
-      let shipEmbed = new EmbedBuilder()
-        .setTitle(`🔀 ${newShipName}`)
-        .addFields({
-          name: `${generateEmoji(shipRate)} - ${shipRate}%`,
-          value: `${addition}`,
-        });
-      let returnable = {
-        shipName: inlineCode(newShipName),
-        loveMessage: addition,
-        titleMessage: `💗 ${bold("MATCHING")} 💗\n🔻${inlineCode(
-          name1
-        )}\n🔺${inlineCode(name2)}`,
-        shipEmbed: shipEmbed,
+      function generateShipName(name1, name2) {
+        let newShipName =
+          name1.substring(0, Math.floor(name1.length / 2)) +
+          name2.substring(Math.floor(name2.length / 2));
+
+        return newShipName;
+      }
+      function generateShipRateDescription(rate) {
+        let descriptions = [
+          "Terrible 😐",
+          "Not Too Bad 🙃",
+          "Average 😁",
+          "Nice! 😏",
+          "Above Average 😃",
+          "Too Good 😍",
+          "Perfect! 🥰😍❤️",
+        ];
+        let description =
+          rate <= 19
+            ? descriptions[0]
+            : rate >= 20 && rate <= 40
+            ? descriptions[1]
+            : rate >= 41 && rate <= 68
+            ? descriptions[2]
+            : rate == 69
+            ? descriptions[3]
+            : rate >= 70 && rate <= 99
+            ? descriptions[4]
+            : rate == 100
+            ? descriptions[5]
+            : descriptions[2];
+        return description;
+      }
+      function generateShipRate() {
+        let shipRate = Math.ceil(Math.random() * 100);
+        return shipRate;
+      }
+      let userOne = await checkUser(user1);
+      let userTwo = await checkUser(user2);
+      let shipName = generateShipName(userOne.username, userTwo.username);
+      let shipImage = await generateImage(
+        userOne.avatarURL({ extension: "png", size: 256 }),
+        userTwo.avatarURL({ extension: "png", size: 256 })
+      );
+      let shipRate = generateShipRate();
+      let shipRateEmojis = generateEmoji(shipRate);
+      let shipRateDescription = generateShipRateDescription(shipRate);
+      return {
+        shipName: shipName,
+        shipImage: shipImage,
         shipRate: shipRate,
-        name1: name1,
-        name2: name2,
+        shipRateEmojis: shipRateEmojis,
+        shipRateDescription: shipRateDescription,
+        shipTitle: `💗 **MATCHING** 💗\n🔻\`${userOne.username}\`\n🔺\`${userTwo.username}\``,
       };
-      return returnable;
     }
     async function bothDiscord() {
       // Defer the initial reply
-      await interaction.deferReply();
-      let otherUser = interaction.guild.members.cache.randomKey();
-      async function chooseNewUser(user, otherUser) {
-        const otherUserName =
-          interaction.guild.members.cache.get(otherUser).user.username;
-        if (user.username === otherUserName) {
-          otherUser = interaction.guild.members.cache.randomKey();
-          chooseNewUser(user, otherUser);
-        } else {
-          let otherUserName =
-            interaction.guild.members.cache.get(otherUser).user;
-          let shipName = generateShipName(userUsername, otherUserName.username);
-          let buffer = await generateImage(
-            interaction.user.avatarURL({ extension: "png", size: 256 }),
-            otherUserName.avatarURL({ extension: "png", size: 256 })
-          );
+      let otherUserID = interaction.guild.members.cache.randomKey();
 
-          // Send the follow-up message with the generated image
-          interaction.editReply({
-            content: `${shipName.titleMessage}`,
-            embeds: [shipName.shipEmbed.setImage("attachment://shipImage.png")],
-            files: [
-              {
-                attachment: buffer,
-                name: "shipImage.png",
-              },
-            ],
-          });
+      async function chooseNewUser(user, otherUser) {
+        const UserTwo = interaction.guild.members.cache.get(otherUser).user;
+
+        if (user.username === UserTwo.username) {
+          otherUser = interaction.guild.members.cache.randomKey();
+          return chooseNewUser(user, otherUser); // Fix: Return the recursive call
+        } else {
+          let otherUserObject =
+            interaction.guild.members.cache.get(otherUser).user;
+          return otherUserObject; // Fix: Return the user object directly
         }
       }
 
-      let userUsername = interaction.user.username;
+      let otherUser = await chooseNewUser(interaction.user, otherUserID);
 
-      chooseNewUser(interaction.user, otherUser);
+      return {
+        userOne: interaction.user,
+        userTwo: otherUser,
+      };
     }
-    async function getUser(user) {
-      if (user.startsWith("<@")) {
-        let userId = user.replace("<@", "").replace(">", "");
-        return await interaction.client.users.fetch(userId);
-      } else {
-        return {
-          username: user,
-        };
-      }
-    }
-    async function singleDiscord() {
-      /**
-       * @type {String}
-       */
-      let otherUser = namesArray[0];
-      otherUser = (await getUser(otherUser)).username;
-      let shipName = generateShipName(interaction.user.username, otherUser);
-      interaction.reply({
-        content: `${shipName.titleMessage}`,
-        embeds: [shipName.shipEmbed],
-      });
-    }
-    async function bothNotDiscord() {
-      let firstUser = namesArray[0];
-      let otherUser = namesArray[1];
-      firstUser = (await getUser(firstUser)).username;
-      otherUser = (await getUser(otherUser)).username;
 
-      let shipName = generateShipName(firstUser, otherUser);
-      interaction.reply({
-        content: `${shipName.titleMessage}`,
-        embeds: [shipName.shipEmbed],
-      });
+    function singleDiscord() {
+      return {
+        userOne: interaction.user,
+        userTwo: namesArray[0],
+      };
+    }
+    function bothNotDiscord() {
+      return {
+        userOne: namesArray[0],
+        userTwo: namesArray[1],
+      };
     }
     async function checkCommandType() {
-      namesArray.length == 0
-        ? await bothDiscord()
+      return namesArray.length == 0
+        ? (async () => {
+            return await bothDiscord();
+          })()
         : namesArray.length == 1
-        ? await singleDiscord()
+        ? (() => {
+            return singleDiscord();
+          })()
         : namesArray.length == 2
-        ? await bothNotDiscord()
-        : bothDiscord();
+        ? (() => {
+            return bothNotDiscord();
+          })()
+        : (async () => {
+            return await bothDiscord();
+          })();
     }
-    await checkCommandType();
+    let users = await checkCommandType();
+    ship({ user1: users.userOne, user2: users.userTwo }).then(async (shipResults) => {
+      let shipEmbed = new EmbedBuilder()
+        .setTitle(`🔀 ${shipResults.shipName}`)
+        .addFields({
+          value: `** **`,
+          name: `${shipResults.shipRate}% ${shipResults.shipRateEmojis} ${shipResults.shipRateDescription}`,
+        })
+        .setImage("attachment://shipImage.png");
+      await interaction.editReply({
+        content: `${shipResults.shipTitle}`,
+        embeds: [shipEmbed],
+        files: [
+          {
+            name: "shipImage.png",
+            attachment: shipResults.shipImage,
+          },
+        ],
+      });
+    });
   },
 };

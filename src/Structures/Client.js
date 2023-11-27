@@ -2,6 +2,8 @@ const discord = require("discord.js");
 const fs = require("node:fs");
 const path = require("node:path");
 
+const { createClient } = require("@supabase/supabase-js");
+
 class Client extends discord.Client {
   /**
    *
@@ -12,6 +14,7 @@ class Client extends discord.Client {
     this.Commands = new Map();
     this.CommandCategories = new Map();
     this.textCommandsPrefix = "!";
+    this.db = createClient(process.env.supabaseURL, process.env.supabaseKey);
   }
   loadFunctionFiles(type) {
     let types = {

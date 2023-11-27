@@ -126,7 +126,7 @@ module.exports = {
             : rate >= 70 && rate <= 99
             ? descriptions[4]
             : rate == 100
-            ? descriptions[5]
+            ? descriptions[6]
             : descriptions[2];
         return description;
       }
@@ -218,7 +218,7 @@ module.exports = {
             value: `** **`,
             name: `${shipResults.shipRate}% ${shipResults.shipRateEmojis} ${shipResults.shipRateDescription}`,
           })
-          .setImage("attachment://shipImage.png");
+          .setImage("attachment://shipImage.png").setColor(Colors.Green);
         await interaction.editReply({
           content: `${shipResults.shipTitle}`,
           embeds: [shipEmbed],

@@ -1,4 +1,4 @@
-const { EmbedBuilder } = require("discord.js");
+const { EmbedBuilder, User } = require("discord.js");
 const CommandBuilder = require("../Structures/CommandBuilder");
 
 module.exports = {
@@ -10,7 +10,15 @@ module.exports = {
     )
     .setType("BOTH")
     .setCategory("Miscellaneous"),
+    /**
+     * 
+     * @param {import("discord.js").Interaction} interaction 
+     * @param {Array} args 
+     */
   async execute(interaction, args) {
+    /**
+     * @type {User}
+     */
     let user = interaction.content
       ? args[1]
         ? interaction.client.users.cache.get(
@@ -39,6 +47,6 @@ module.exports = {
       : interaction.user.avatarURL();
     let userAv = interaction.content ? args1Found : userOptionFound;
    
-    await interaction.reply(`[${user.displayName}'s Avatar](${userAv})`);
+    await interaction.reply(`[${user.globalName}'s Avatar](${userAv})`);
   },
 };

@@ -130,3 +130,4 @@ dist
 /src/Data/help.js.test
 /src/Commands/say.js
 /src/PaidCommands/
+src/Commands/voice.js

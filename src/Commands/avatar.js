@@ -47,6 +47,6 @@ module.exports = {
       : interaction.user.avatarURL();
     let userAv = interaction.content ? args1Found : userOptionFound;
    
-    await interaction.reply(`[${user.globalName}'s Avatar](${userAv})`);
+    await interaction.reply(`[Avatar](${userAv})`);
   },
 };

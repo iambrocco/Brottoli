@@ -131,3 +131,4 @@ dist
 /src/Commands/say.js
 /src/PaidCommands/
 src/Commands/voice.js
+temp.wav

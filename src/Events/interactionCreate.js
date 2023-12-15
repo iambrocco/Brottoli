@@ -6,7 +6,6 @@ module.exports = {
    * @param {import("discord.js").Interaction} interaction
    */
   async execute(interaction) {
-    if(interaction.channel.isDMBased()) return interaction.reply("Interactions Can only be run in servers.")
     if (interaction.isCommand()) {
       let command = interaction.client.Commands.get(interaction.commandName);
       if (command.data.commandType.toLowerCase() == "text") {

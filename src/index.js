@@ -4,7 +4,7 @@ const express = require("express");
 const app = express();
 const port = 3000;
 const client = new Client({
-  intents: ["GuildMessages", "GuildMembers", "MessageContent", "Guilds", "DirectMessages"],
+  intents: ["GuildMessages", "GuildMembers", "MessageContent", "Guilds"],
 });
 
 client.start(process.env.token);

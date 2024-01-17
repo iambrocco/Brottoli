@@ -1,7 +1,9 @@
 const discord = require("discord.js");
 const fs = require("node:fs");
 const path = require("node:path");
-
+const express = require("express");
+const app = express();
+const port = 3000;
 
 class Client extends discord.Client {
   /**
@@ -112,6 +114,14 @@ class Client extends discord.Client {
   }
   start(token) {
     console.clear();
+    app.get("/", (req, res) => {
+      res.send("Ping Me PLS!");
+    });
+    
+    app.listen(port, () => {
+      console.log(`Brottoli Web Server Running on *:${port}`);
+    });
+    
     this.loadFunctionFiles("ev");
     this.loadFunctionFiles("cmd");
     this.refreshCommands(token);

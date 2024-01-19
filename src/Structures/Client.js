@@ -1,9 +1,7 @@
 const discord = require("discord.js");
 const fs = require("node:fs");
 const path = require("node:path");
-const express = require("express");
-const app = express();
-const port = 3000;
+
 
 class Client extends discord.Client {
   /**

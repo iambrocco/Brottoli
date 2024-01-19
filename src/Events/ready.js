@@ -1,6 +1,8 @@
 const { ActivityType } = require("discord.js");
 const Client = require("../Structures/Client");
-
+const express = require("express");
+const app = express();
+const port = 3000;
 module.exports = {
   name: "ready",
   /**

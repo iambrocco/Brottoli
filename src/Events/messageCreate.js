@@ -1,4 +1,5 @@
 const { Message, EmbedBuilder, Colors } = require("discord.js");
+const ErrorEmbed = require("../Structures/ErrorEmbed.js");
 
 module.exports = {
   name: "messageCreate",
@@ -18,10 +19,8 @@ module.exports = {
       .split(/ +/);
     let command = message.client.Commands.get(args[0]);
     if (command && command.data.commandType.toLowerCase() == "slash") {
-      let errorEmbed = new EmbedBuilder()
-        .setTitle("Error!")
-        .setColor(Colors.Red)
-        .addFields({
+      let errorEmbed = new ErrorEmbed()
+        .setError({
           name: "Wrong Command Type!",
           value: "This Command is a slash only command!",
         });

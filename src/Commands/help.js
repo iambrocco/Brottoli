@@ -1,5 +1,6 @@
 const { EmbedBuilder, Colors, codeBlock } = require("discord.js");
-const CommandBuilder = require("../Structures/CommandBuilder");
+const CommandBuilder = require("../Structures/CommandBuilder.js");
+const CommandTypes = require("../Structures/Enums/CommandTypes.js");;
 module.exports = {
   data: new CommandBuilder()
     .setName("help")
@@ -12,7 +13,7 @@ module.exports = {
     )
 
     .setCategory("Utility")
-    .setType("BOTH"),
+    .setType(CommandTypes.BOTH),
   async execute(interaction, args) {
     let commandName = interaction.content
       ? args[1].toLowerCase()
@@ -23,9 +24,8 @@ module.exports = {
         .setTitle(`${interaction.client.user.username}'s List of Commands`)
         .setColor(Colors.Green);
       const groupedCommands = {};
-
       interaction.client.Commands.forEach((command) => {
-        const category = command.data.category;
+        const category = command.data.category
         if (groupedCommands[category]) {
           groupedCommands[category].push(command);
         } else {
@@ -42,7 +42,7 @@ module.exports = {
         const value = commands
           .map((cmd) => `${cmd.data.name}: ${cmd.data.description}`)
           .join("\n");
-        helpEmbed.addFields({ name: `${category}`, value: `${value}` });
+        helpEmbed.addFields({ name: `${category.replace(category.charAt(0), category.charAt(0).toUpperCase())}`, value: `${value}` });
       }
 
       await interaction.reply({ embeds: [helpEmbed] });

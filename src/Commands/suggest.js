@@ -4,14 +4,15 @@ const {
   TextInputStyle,
   ActionRowBuilder,
 } = require("discord.js");
-const CommandBuilder = require("../Structures/CommandBuilder");
+const CommandBuilder = require("../Structures/CommandBuilder.js");
+const CommandTypes = require("../Structures/Enums/CommandTypes.js");;
 
 module.exports = {
   data: new CommandBuilder()
     .setName("suggest")
     .setDescription(`Suggest a Feature for Brottoli`)
     .setCategory("Utility")
-    .setType("SLASH"),
+    .setType(CommandTypes.SLASH),
   /**
    *
    * @param {import("discord.js").Interaction} interaction

@@ -8,14 +8,15 @@ const {
   Role,
   Guild,
 } = require("discord.js");
-const CommandBuilder = require("../Structures/CommandBuilder");
+const CommandBuilder = require("../Structures/CommandBuilder.js");
+const CommandTypes = require("../Structures/Enums/CommandTypes.js");;
 
 module.exports = {
   data: new CommandBuilder()
     .setName("info")
     .setDescription("Get info about a specific thing")
     .setCategory("Miscellaneous")
-    .setType("SLASH")
+    .setType(CommandTypes.SLASH)
     .addSubcommand((subcommand) =>
       subcommand
         .setName("user")

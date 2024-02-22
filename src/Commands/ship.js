@@ -1,12 +1,11 @@
 const {
   EmbedBuilder,
   Colors,
-  codeBlock,
-  inlineCode,
-  bold,
-  User,
 } = require("discord.js");
-const CommandBuilder = require("../Structures/CommandBuilder");
+const canvasImport = require("@napi-rs/canvas");
+
+const CommandBuilder = require("../Structures/CommandBuilder.js");
+const CommandTypes = require("../Structures/Enums/CommandTypes.js");;
 module.exports = {
   data: new CommandBuilder()
     .setName("ship")
@@ -17,13 +16,13 @@ module.exports = {
         .setDescription("The names/users of the ship, seperated with a comma")
     )
     .setCategory("Fun")
-    .setType("SLASH"),
+    .setType(CommandTypes.SLASH),
   /**
    *
    * @param {import("discord.js").Interaction} interaction
    * @param {*} args
    */
-  async execute(interaction, args) {
+  async execute(interaction) {
     let namesOption = interaction.options.getString("names");
     let namesArray = namesOption
       ? namesOption
@@ -48,7 +47,7 @@ module.exports = {
           } catch {
             return {
               username: user,
-              avatarURL: ({ extension, size }) => {
+              avatarURL: () => {
                 return "https://i.imgur.com/p8oEVeT.png";
               },
             };
@@ -56,7 +55,7 @@ module.exports = {
         } else {
           return {
             username: user,
-            avatarURL: ({ extension, size }) => {
+            avatarURL: () => {
               return "https://i.imgur.com/p8oEVeT.png";
             },
           };
@@ -64,13 +63,9 @@ module.exports = {
       }
       async function generateImage(firstPFP, SecondPFP) {
         SecondPFP = SecondPFP ?? "https://i.imgur.com/p8oEVeT.png";
-        const canvasImport = require("canvas");
         let canvas = canvasImport.createCanvas(600, 300);
         let ctx = canvas.getContext("2d");
-        canvasImport.registerFont("./src/Data/Twemoji.ttf", {
-          family: "Twemoji",
-        });
-        ctx.font = "100px Twemoji";
+        ctx.font = "100px";
         ctx.fillStyle = "red";
         const [imga, imgb] = await Promise.all([
           canvasImport.loadImage(firstPFP),

@@ -1,5 +1,6 @@
 // Import
-const SlashCommandBuilder = require("../Structures/CommandBuilder.js");
+const CommandBuilder = require("../Structures/CommandBuilder.js");
+const CommandTypes = require("../Structures/Enums/CommandTypes.js");
 const {
   ModalBuilder,
   TextInputBuilder,
@@ -13,10 +14,10 @@ const Icons = mcData.Icons;
 // Creating the command
 module.exports = {
   // Exporting the Data
-  data: new SlashCommandBuilder()
+  data: new CommandBuilder()
     .setName("minecraft")
     .setCategory("Gaming")
-    .setType("SLASH")
+    .setType(CommandTypes.SLASH)
     .setDescription("Minecraft related Commands")
     .addSubcommandGroup((group) =>
       group

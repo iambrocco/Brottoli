@@ -1,6 +1,7 @@
-const CommandBuilder = require("../Structures/CommandBuilder");
+const CommandBuilder = require("../Structures/CommandBuilder.js");
+const CommandTypes = require("../Structures/Enums/CommandTypes.js");;
 const { EmbedBuilder } = require("discord.js");
-const { namedColors } = require("color-name-list");
+const canvasImport = require("@napi-rs/canvas");
 
 module.exports = {
   data: new CommandBuilder()
@@ -10,7 +11,7 @@ module.exports = {
       option.setName("color").setDescription("the color code")
     )
     .setCategory("Miscellaneous")
-    .setType("slash"),
+    .setType(CommandTypes.SLASH),
   async execute(interaction, args) {
     await interaction.deferReply();
 
@@ -19,7 +20,6 @@ module.exports = {
     let generatedColor = color ?? generateRGB();
     let colorImg = await generateCanvas(generatedColor);
     async function generateCanvas(color) {
-      const canvasImport = require("canvas");
       let canvas = canvasImport.createCanvas(128, 128);
       let ctx = canvas.getContext("2d");
       ctx.fillStyle = color;

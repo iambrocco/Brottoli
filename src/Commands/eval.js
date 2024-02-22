@@ -5,12 +5,12 @@ const {
   TextInputStyle,
 } = require("discord.js");
 const CommandBuilder = require("../Structures/CommandBuilder.js");
-
+const CommandTypes = require("../Structures/Enums/CommandTypes.js");
 module.exports = {
   data: new CommandBuilder()
     .setName("eval")
     .setDescription("JS Code Emulator")
-    .setType("SLASH")
+    .setType(CommandTypes.SLASH)
     .setCategory("Miscellaneous"),
   async execute(interaction) {
     const modal = new ModalBuilder()
@@ -31,7 +31,6 @@ module.exports = {
     // Add inputs to the modal
     modal.addComponents(ActionRow);
     // Show the modal to the user
-
     await interaction.showModal(modal);
   },
 };

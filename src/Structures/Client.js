@@ -64,7 +64,7 @@ class Client extends discord.Client {
     }
     return this;
   }
-  refreshCommands(token) {
+  async refreshCommands(token) {
     const commands = [];
     this.Commands.forEach((command) => {
       commands.push(command.data.toJSON());
@@ -83,10 +83,11 @@ class Client extends discord.Client {
           console.log(
             `Successfully reloaded ${e.length} application (/) commands.`
           );
-        })
-        .catch(async (err) => {
-          console.log(`An Error Occured: ${err}`);
+        }).catch(error => {
+          console.log("An Error Occured:", error);
+          this.refreshCommands(token)
         });
+    
     })();
   }
   setCommandCategories() {

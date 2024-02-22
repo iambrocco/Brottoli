@@ -126,9 +126,7 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
-/src/Data/minigames.js
-/src/Data/help.js.test
-/src/Commands/say.js
 /src/PaidCommands/
-src/Commands/voice.js
-temp.wav
+/src/Structures/Enums/MeetChatClientConnectionStates.js
+/src/Structures/MeetChatClient.js
+/src/Commands/meetchat.js

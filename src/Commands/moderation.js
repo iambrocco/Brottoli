@@ -1,6 +1,7 @@
 // Import
 const { GuildMember, EmbedBuilder, Colors } = require("discord.js");
 const CommandBuilder = require("../Structures/CommandBuilder.js");
+const CommandTypes = require("../Structures/Enums/CommandTypes.js")
 const ms = require("ms");
 
 module.exports = {
@@ -110,7 +111,7 @@ module.exports = {
             .setRequired(true)
         )
     )
-    .setType("SLASH")
+    .setType(CommandTypes.SLASH)
     .setDescription("Moderation Commands"),
   /**
    *

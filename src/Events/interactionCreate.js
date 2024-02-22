@@ -1,4 +1,6 @@
 const { EmbedBuilder, Colors } = require("discord.js");
+const ErrorEmbed = require("../Structures/ErrorEmbed.js")
+
 module.exports = {
   name: "interactionCreate",
   /**
@@ -9,10 +11,8 @@ module.exports = {
     if (interaction.isCommand()) {
       let command = interaction.client.Commands.get(interaction.commandName);
       if (command.data.commandType.toLowerCase() == "text") {
-        let errorEmbed = new EmbedBuilder()
-          .setTitle("Error!")
-          .setColor(Colors.Red)
-          .addFields({
+        let errorEmbed = new ErrorEmbed()
+          .setError({
             name: "Wrong Command Type!",
             value: "This Command is a text only command!",
           });

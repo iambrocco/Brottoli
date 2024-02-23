@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "@napi-rs/canvas": "^0.1.45",
+    "color-name-list": "^10.19.0",
     "discord.js": "^14.13.0",
     "dotenv": "^16.3.1",
     "javascript-color-gradient": "^2.4.4",

@@ -28,8 +28,6 @@ module.exports = {
       : [];
 
     async function ship({ user1, user2 }) {
-      await interaction.deferReply();
-
       async function checkUser(userResolvable) {
         let user = `${userResolvable}`;
         let userId = user.replace("<@", "").replace(">", "");
@@ -152,53 +150,55 @@ module.exports = {
         shipUserTwo: userTwo,
       };
     }
-    async function bothDiscord(interaction) {
-      // Fetch all members
-      await interaction.guild.members.fetch();
+    async function checkCommandType(interaction) {
+      async function bothDiscord(interaction) {
+        // Fetch all members
+        await interaction.guild.members.fetch();
 
-      // Get all member IDs
-      const memberIDs = interaction.guild.members.cache.map(
-        (member) => member.id
-      );
+        // Get all member IDs
+        const memberIDs = interaction.guild.members.cache.map(
+          (member) => member.id
+        );
 
-      // Select a random member ID
-      const randomMemberID =
-        memberIDs[Math.floor(Math.random() * memberIDs.length)];
+        // Select a random member ID
+        const randomMemberID =
+          memberIDs[Math.floor(Math.random() * memberIDs.length)];
 
-      async function chooseNewUser(user, otherUserID) {
-        const otherMember = await interaction.guild.members.fetch(otherUserID);
-        const UserTwo = otherMember.user;
+        async function chooseNewUser(user, otherUserID) {
+          const otherMember = await interaction.guild.members.fetch(
+            otherUserID
+          );
+          const UserTwo = otherMember.user;
 
-        if (user.username === UserTwo.username) {
-          const newRandomMemberID =
-            memberIDs[Math.floor(Math.random() * memberIDs.length)];
-          return chooseNewUser(user, newRandomMemberID); // Recursive call with a new random member ID
-        } else {
-          return UserTwo; // Return the user object directly
+          if (user.username === UserTwo.username) {
+            const newRandomMemberID =
+              memberIDs[Math.floor(Math.random() * memberIDs.length)];
+            return chooseNewUser(user, newRandomMemberID); // Recursive call with a new random member ID
+          } else {
+            return UserTwo; // Return the user object directly
+          }
         }
+
+        let otherUser = await chooseNewUser(interaction.user, randomMemberID);
+
+        return {
+          userOne: interaction.user.id,
+          userTwo: otherUser.id,
+        };
       }
 
-      let otherUser = await chooseNewUser(interaction.user, randomMemberID);
-
-      return {
-        userOne: interaction.user.id,
-        userTwo: otherUser.id,
-      };
-    }
-
-    function singleDiscord() {
-      return {
-        userOne: interaction.user.id,
-        userTwo: namesArray[0],
-      };
-    }
-    function bothNotDiscord() {
-      return {
-        userOne: namesArray[0],
-        userTwo: namesArray[1],
-      };
-    }
-    async function checkCommandType(interaction) {
+      function singleDiscord() {
+        return {
+          userOne: interaction.user.id,
+          userTwo: namesArray[0],
+        };
+      }
+      function bothNotDiscord() {
+        return {
+          userOne: namesArray[0],
+          userTwo: namesArray[1],
+        };
+      }
       return namesArray.length == 0
         ? (async () => {
             return await bothDiscord(interaction);
@@ -217,8 +217,8 @@ module.exports = {
           })();
     }
     let users = await checkCommandType(interaction);
-    ship({ user1: users.userOne, user2: users.userTwo })
-      .then(async (shipResults) => {
+    await interaction.deferReply().then(() => {
+      async function reply(shipResults) {
         let shipEmbed = new EmbedBuilder()
           .setTitle(`🔀 ${shipResults.shipName}`)
           .addFields({
@@ -237,10 +237,15 @@ module.exports = {
             },
           ],
         });
-      })
-      .catch((error) => {
-        interaction.editReply("An Error Occured");
-        console.log(error);
-      });
+      }
+      ship({ user1: users.userOne, user2: users.userTwo })
+        .then(async (shipResults) => {
+          await reply(shipResults)
+        })
+        .catch((error) => {
+          interaction.editReply("An Error Occured");
+          console.log(error);
+        });
+    });
   },
 };

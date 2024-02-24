@@ -92,7 +92,7 @@ module.exports = {
             },
             {
               name: `Server Nickname`,
-              value: `${inlineCode(interaction.guild.members.resolve(user).nickname ?? user.globalName)}`,
+              value: `${inlineCode(interaction.guild.members.resolve(user).nickname ?? user.globalName ?? user.username)}`,
               inline: true,
             },
             {
@@ -194,7 +194,7 @@ module.exports = {
             },
             {
               name: `Server Owner`,
-              value: `${(await interaction.guild.fetchOwner()).user.username}`,
+              value: `${(await interaction.guild.fetchOwner()).user}`,
               inline: true
             },
             {

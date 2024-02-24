@@ -91,6 +91,11 @@ module.exports = {
               value: `${codeBlock((await interaction.guild.members.fetch(user.id)).joinedAt.toUTCString())}`,
             },
             {
+              name: `Server Nickname`,
+              value: `${inlineCode(interaction.guild.members.resolve(user).nickname ?? user.globalName)}`,
+              inline: true,
+            },
+            {
               name: "User Created At",
               value: `${codeBlock(user.createdAt.toUTCString())}`,
             }

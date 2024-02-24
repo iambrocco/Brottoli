@@ -64,10 +64,18 @@ module.exports = {
         return color;
       }
 
-
-      if (RegExp(`[g-z]`).test(color)) {
-        let someNamedColor = namedColors.find(colorParam => colorParam.name.toLowerCase() == color);
-        return someNamedColor.hex
+      if (
+        RegExp(`[g-z]`).test(color) &&
+        !color.startsWith("rgba") &&
+        !color.startsWith("rgb")
+      ) {
+        let someNamedColor = namedColors.find(
+          (colorParam) => colorParam.name.toLowerCase() == color
+        );
+        if (!someNamedColor) {
+          return "#000000";
+        }
+        return someNamedColor.hex;
       }
 
       // RGBA format or RGB format
@@ -159,7 +167,11 @@ module.exports = {
         name: "Gradient Info",
         value: `Gradient Start: ${
           generatedCanvasWithGradient.gradient[0]
-        }\nGradient Finish: ${generatedCanvasWithGradient.gradient[generatedCanvasWithGradient.gradient.length - 1]}\nGradient Points Count: ${midPoints}`,
+        }\nGradient Finish: ${
+          generatedCanvasWithGradient.gradient[
+            generatedCanvasWithGradient.gradient.length - 1
+          ]
+        }\nGradient Points Count: ${midPoints}`,
       });
     await interaction.editReply({
       embeds: [gradientEmbed],

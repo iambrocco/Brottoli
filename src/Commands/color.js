@@ -1,5 +1,5 @@
 const CommandBuilder = require("../Structures/CommandBuilder.js");
-const CommandTypes = require("../Structures/Enums/CommandTypes.js");;
+const CommandTypes = require("../Structures/Enums/CommandTypes.js");
 const { EmbedBuilder } = require("discord.js");
 const canvasImport = require("@napi-rs/canvas");
 const namedColors = require("color-name-list");
@@ -39,10 +39,18 @@ module.exports = {
         return color;
       }
 
-
-      if (RegExp(`[g-z]`).test(color)) {
-        let someNamedColor = namedColors.find(colorParam => colorParam.name.toLowerCase() == color);
-        return someNamedColor.hex
+      if (
+        RegExp(`[g-z]`).test(color) &&
+        !color.startsWith("rgba") &&
+        !color.startsWith("rgb")
+      ) {
+        let someNamedColor = namedColors.find(
+          (colorParam) => colorParam.name.toLowerCase() == color
+        );
+        if (!someNamedColor) {
+          return "#000000";
+        }
+        return someNamedColor.hex;
       }
 
       // RGBA format or RGB format

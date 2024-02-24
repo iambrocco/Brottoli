@@ -1,11 +1,7 @@
-const {
-  EmbedBuilder,
-  Colors,
-} = require("discord.js");
+const { EmbedBuilder, Colors } = require("discord.js");
 const canvasImport = require("@napi-rs/canvas");
-
 const CommandBuilder = require("../Structures/CommandBuilder.js");
-const CommandTypes = require("../Structures/Enums/CommandTypes.js");;
+const CommandTypes = require("../Structures/Enums/CommandTypes.js");
 module.exports = {
   data: new CommandBuilder()
     .setName("ship")
@@ -65,7 +61,8 @@ module.exports = {
         SecondPFP = SecondPFP ?? "https://i.imgur.com/p8oEVeT.png";
         let canvas = canvasImport.createCanvas(600, 300);
         let ctx = canvas.getContext("2d");
-        ctx.font = "100px";
+
+        ctx.font = "100px Noto Color Emoji";
         ctx.fillStyle = "red";
         const [imga, imgb] = await Promise.all([
           canvasImport.loadImage(firstPFP),
@@ -103,30 +100,35 @@ module.exports = {
         let descriptions = [
           "Terrible 😐",
           "Not Too Bad 🙃",
+          "Good 😊",
           "Average 😁",
           "Nice! 😏",
-          "Above Average 😃",
+          "Great! 😃",
           "Too Good 😍",
           "Perfect! 🥰😍❤️",
         ];
         let description =
           rate <= 19
             ? descriptions[0]
-            : rate >= 20 && rate <= 40
+            : rate >= 20 && rate <= 30
             ? descriptions[1]
-            : rate >= 41 && rate <= 68
+            : rate >= 31 && rate <= 49
             ? descriptions[2]
-            : rate == 69
+            : rate >= 50 && rate <= 68
             ? descriptions[3]
-            : rate >= 70 && rate <= 99
+            : rate == 69
             ? descriptions[4]
-            : rate == 100
+            : rate >= 70 && rate <= 89
+            ? descriptions[5]
+            : rate >= 90 && rate <= 99
             ? descriptions[6]
+            : rate == 100
+            ? descriptions[7]
             : descriptions[2];
         return description;
       }
       function generateShipRate() {
-        let shipRate = Math.ceil(Math.random() * 100);
+        let shipRate = Math.ceil(Math.random() * 101);
         return shipRate;
       }
       let userOne = await checkUser(user1);
@@ -150,24 +152,33 @@ module.exports = {
         shipUserTwo: userTwo,
       };
     }
-    async function bothDiscord() {
-      // Defer the initial reply
-      let otherUserID = interaction.guild.members.cache.randomKey();
+    async function bothDiscord(interaction) {
+      // Fetch all members
+      await interaction.guild.members.fetch();
 
-      async function chooseNewUser(user, otherUser) {
-        const UserTwo = interaction.guild.members.cache.get(otherUser).user;
+      // Get all member IDs
+      const memberIDs = interaction.guild.members.cache.map(
+        (member) => member.id
+      );
+
+      // Select a random member ID
+      const randomMemberID =
+        memberIDs[Math.floor(Math.random() * memberIDs.length)];
+
+      async function chooseNewUser(user, otherUserID) {
+        const otherMember = await interaction.guild.members.fetch(otherUserID);
+        const UserTwo = otherMember.user;
 
         if (user.username === UserTwo.username) {
-          otherUser = interaction.guild.members.cache.randomKey();
-          return chooseNewUser(user, otherUser); // Fix: Return the recursive call
+          const newRandomMemberID =
+            memberIDs[Math.floor(Math.random() * memberIDs.length)];
+          return chooseNewUser(user, newRandomMemberID); // Recursive call with a new random member ID
         } else {
-          let otherUserObject =
-            interaction.guild.members.cache.get(otherUser).user;
-          return otherUserObject; // Fix: Return the user object directly
+          return UserTwo; // Return the user object directly
         }
       }
 
-      let otherUser = await chooseNewUser(interaction.user, otherUserID);
+      let otherUser = await chooseNewUser(interaction.user, randomMemberID);
 
       return {
         userOne: interaction.user.id,
@@ -187,10 +198,10 @@ module.exports = {
         userTwo: namesArray[1],
       };
     }
-    async function checkCommandType() {
+    async function checkCommandType(interaction) {
       return namesArray.length == 0
         ? (async () => {
-            return await bothDiscord();
+            return await bothDiscord(interaction);
           })()
         : namesArray.length == 1
         ? (() => {
@@ -201,10 +212,11 @@ module.exports = {
             return bothNotDiscord();
           })()
         : (async () => {
-            return await bothDiscord();
+            console.log("read");
+            return await bothDiscord(interaction);
           })();
     }
-    let users = await checkCommandType();
+    let users = await checkCommandType(interaction);
     ship({ user1: users.userOne, user2: users.userTwo })
       .then(async (shipResults) => {
         let shipEmbed = new EmbedBuilder()
@@ -213,7 +225,8 @@ module.exports = {
             value: `** **`,
             name: `${shipResults.shipRate}% ${shipResults.shipRateEmojis} ${shipResults.shipRateDescription}`,
           })
-          .setImage("attachment://shipImage.png").setColor(Colors.Green);
+          .setImage("attachment://shipImage.png")
+          .setColor(Colors.Green);
         await interaction.editReply({
           content: `${shipResults.shipTitle}`,
           embeds: [shipEmbed],

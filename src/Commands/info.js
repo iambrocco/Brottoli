@@ -194,7 +194,7 @@ module.exports = {
             },
             {
               name: `Server Owner`,
-              value: `${interaction.client.guilds.cache.get(server.id).members.cache.get(server.ownerId)}`,
+              value: `${(await interaction.guild.fetchOwner()).user.username}`,
               inline: true
             },
             {

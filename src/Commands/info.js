@@ -9,7 +9,7 @@ const {
   Guild,
 } = require("discord.js");
 const CommandBuilder = require("../Structures/CommandBuilder.js");
-const CommandTypes = require("../Structures/Enums/CommandTypes.js");;
+const CommandTypes = require("../Structures/Enums/CommandTypes.js");
 
 module.exports = {
   data: new CommandBuilder()
@@ -52,6 +52,20 @@ module.exports = {
    * @param {import("discord.js").Interaction} interaction
    */
   async execute(interaction) {
+    let channelTypes = {
+      0: "GuildText",
+      1: "DM",
+      2: "GuildVoice",
+      3: "GroupDM",
+      4: "GuildCategory",
+      5: "GuildAnnouncement",
+      10: "AnnouncementThread",
+      11: "PublicThread",
+      12: "PrivateThread",
+      13: "GuildStageVoice",
+      14: "GuildDirectory",
+      15: "GuildForum",
+    };
     let subcommand = interaction.options.getSubcommand();
     let infoEmbed = new EmbedBuilder();
     switch (subcommand) {
@@ -88,11 +102,19 @@ module.exports = {
             },
             {
               name: "User Joined Server At",
-              value: `${codeBlock((await interaction.guild.members.fetch(user.id)).joinedAt.toUTCString())}`,
+              value: `${codeBlock(
+                (
+                  await interaction.guild.members.fetch(user.id)
+                ).joinedAt.toUTCString()
+              )}`,
             },
             {
               name: `Server Nickname`,
-              value: `${inlineCode(interaction.guild.members.resolve(user).nickname ?? user.globalName ?? user.username)}`,
+              value: `${inlineCode(
+                interaction.guild.members.resolve(user).nickname ??
+                  user.globalName ??
+                  user.username
+              )}`,
               inline: true,
             },
             {
@@ -156,7 +178,9 @@ module.exports = {
             },
             {
               name: `Channel Type`,
-              value: `${inlineCode(channel.type)}`,
+              value: `${inlineCode(channelTypes[channel.type])} (${
+                channel.type
+              })`,
               inline: true,
             },
             {
@@ -195,7 +219,7 @@ module.exports = {
             {
               name: `Server Owner`,
               value: `${(await interaction.guild.fetchOwner()).user}`,
-              inline: true
+              inline: true,
             },
             {
               name: `Server AFK Channel`,
@@ -226,7 +250,8 @@ module.exports = {
                 ? server.iconURL()
                 : "https://i.imgur.com/p8oEVeT.png"
             }`
-          ).setColor(Colors.Greyple);
+          )
+          .setColor(Colors.Greyple);
         break;
     }
     await interaction.reply({ embeds: [infoEmbed] });

@@ -55,7 +55,7 @@ module.exports = {
           };
         }
       }
-      async function generateImage(firstPFP, SecondPFP) {
+      async function generateImage(firstPFP, SecondPFP, shipRate) {
         SecondPFP = SecondPFP ?? "https://i.imgur.com/p8oEVeT.png";
         let canvas = canvasImport.createCanvas(600, 300);
         let ctx = canvas.getContext("2d");
@@ -68,7 +68,7 @@ module.exports = {
         ]);
         ctx.drawImage(imga, 10, 30, 256, 256); // Adjust the coordinates as needed
         ctx.drawImage(imgb, 350, 30, 256, 256); // Adjust the coordinates as needed
-        ctx.fillText("❤️", 240, 160);
+        shipRate <= 19 ? ctx.fillText("💔", 240, 160) : ctx.fillText("❤️", 240, 160) 
 
         const buffer = canvas.toBuffer("image/png");
 
@@ -132,11 +132,12 @@ module.exports = {
       let userOne = await checkUser(user1);
       let userTwo = await checkUser(user2);
       let shipName = generateShipName(userOne.username, userTwo.username);
+      let shipRate = generateShipRate();
       let shipImage = await generateImage(
         userOne.avatarURL({ extension: "png", size: 256 }),
-        userTwo.avatarURL({ extension: "png", size: 256 })
+        userTwo.avatarURL({ extension: "png", size: 256 }),
+        shipRate
       );
-      let shipRate = generateShipRate();
       let shipRateEmojis = generateEmoji(shipRate);
       let shipRateDescription = generateShipRateDescription(shipRate);
       return {

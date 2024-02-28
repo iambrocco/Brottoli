@@ -1,8 +1,7 @@
 const discord = require("discord.js");
 const fs = require("node:fs");
 const path = require("node:path");
-
-
+const namedColors = require("color-name-list");
 class Client extends discord.Client {
   /**
    *
@@ -13,6 +12,87 @@ class Client extends discord.Client {
     this.Commands = new Map();
     this.CommandCategories = new Map();
     this.textCommandsPrefix = "!";
+  }
+  colorToHex(color) {
+    function componentToHex(c) {
+      var hex = c.toString(16);
+      return hex.length == 1 ? "0" + hex : hex;
+    }
+    // Remove whitespace and convert to lowercase
+    color = color.trim().toLowerCase();
+    if (  
+      RegExp("[0-9A-Fa-f]{6}|[0-9A-Fa-f]{3}", "g").test(color) &&
+      color.charAt(0) !== "#"
+    ) {
+      return `#${color}`;
+    }
+    // Hex shorthand (e.g., #fff)
+    if (color.charAt(0) === "#") {
+      // Expand shorthand
+      if (color.length === 4) {
+        color =
+          "#" +
+          color.charAt(1) +
+          color.charAt(1) +
+          color.charAt(2) +
+          color.charAt(2) +
+          color.charAt(3) +
+          color.charAt(3);
+      }
+      return color;
+    }
+
+    if (
+      RegExp(`[g-z]`).test(color) &&
+      !color.startsWith("rgba") &&
+      !color.startsWith("rgb")
+    ) {
+      let someNamedColor = namedColors.find(
+        (colorParam) => colorParam.name.toLowerCase() == color
+      );
+      if (!someNamedColor) {
+        return "#000000";
+      }
+      return someNamedColor.hex;
+    }
+
+    // RGBA format or RGB format
+    if (color.startsWith("rgba") || color.startsWith("rgb")) {
+      let rgba = color
+        .slice(color.indexOf("(") + 1, color.indexOf(")"))
+        .split(",");
+      let r = parseInt(rgba[0].trim());
+      let g = parseInt(rgba[1].trim());
+      let b = parseInt(rgba[2].trim());
+      return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+    }
+
+    // Unsupported format
+    return null;
+  }
+
+  invertColor(hexColor) {
+    // Remove # if it's there
+    hexColor = hexColor.replace("#", "");
+
+    // Convert hex to RGB
+    var r = parseInt(hexColor.substr(0, 2), 16);
+    var g = parseInt(hexColor.substr(2, 2), 16);
+    var b = parseInt(hexColor.substr(4, 2), 16);
+
+    // Invert RGB values
+    r = 255 - r;
+    g = 255 - g;
+    b = 255 - b;
+
+    // Convert back to hex
+    var invertedHex =
+      "#" +
+      ("0" + r.toString(16)).slice(-2) +
+      ("0" + g.toString(16)).slice(-2) +
+      ("0" + b.toString(16)).slice(-2);
+
+    return invertedHex;
   }
   loadFunctionFiles(type) {
     let types = {
@@ -83,11 +163,11 @@ class Client extends discord.Client {
           console.log(
             `Successfully reloaded ${e.length} application (/) commands.`
           );
-        }).catch(error => {
+        })
+        .catch((error) => {
           console.log("An Error Occured:", error);
-          this.refreshCommands(token)
+          this.refreshCommands(token);
         });
-    
     })();
   }
   setCommandCategories() {

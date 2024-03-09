@@ -13,14 +13,14 @@ class Client extends discord.Client {
     this.CommandCategories = new Map();
     this.textCommandsPrefix = "!";
   }
-  colorToHex(color) {
+  colorToHex(color, commandType) {
     function componentToHex(c) {
       var hex = c.toString(16);
       return hex.length == 1 ? "0" + hex : hex;
     }
     // Remove whitespace and convert to lowercase
     color = color.trim().toLowerCase();
-    if (  
+    if (
       RegExp("[0-9A-Fa-f]{6}|[0-9A-Fa-f]{3}", "g").test(color) &&
       color.charAt(0) !== "#"
     ) {
@@ -64,7 +64,9 @@ class Client extends discord.Client {
       let r = parseInt(rgba[0].trim());
       let g = parseInt(rgba[1].trim());
       let b = parseInt(rgba[2].trim());
-      return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+      return commandType == "gradient"
+        ? "#" + componentToHex(r) + componentToHex(g) + componentToHex(b)
+        : color;
     }
 
     // Unsupported format

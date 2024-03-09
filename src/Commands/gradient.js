@@ -6,23 +6,23 @@ const { EmbedBuilder } = require("@discordjs/builders");
 module.exports = {
   data: new CommandBuilder()
     .setName("gradient")
-    .setDescription("Generate a color gradient")
+    .setDescription("Generate a Color Gradient")
     .addStringOption((option) =>
       option
         .setName("start")
-        .setDescription("The color to begin the gradient with")
+        .setDescription("The Color to Begin the Gradient With")
         .setRequired(true)
     )
     .addStringOption((option) =>
       option
         .setName("finish")
-        .setDescription("The color to end the gradient with")
+        .setDescription("The Color to End the Gradient With")
         .setRequired(true)
     )
     .addNumberOption((option) =>
       option
         .setName("count")
-        .setDescription("How many colors should the generated gradient have?")
+        .setDescription("How Many Colors Should the Generated Gradient Have?")
         .setRequired(true)
     )
     .addBooleanOption((option) =>
@@ -49,12 +49,12 @@ module.exports = {
       function generateGradientCanvas(startColor, finishColor, midPoints) {
         let gradient = new javascriptColorGradient()
           .setColorGradient(
-            interaction.client.colorToHex(startColor),
-            interaction.client.colorToHex(finishColor)
+            interaction.client.colorToHex(startColor, "gradient"),
+            interaction.client.colorToHex(finishColor, "gradient")
           )
           .setMidpoint(midPoints)
           .getColors();
-        gradient.unshift(interaction.client.colorToHex(startColor));
+        gradient.unshift(interaction.client.colorToHex(startColor, "gradient"));
         let canvasSectionheight = canvas.height / gradient.length;
         let colorsString = "";
         for (color in gradient) {
@@ -90,7 +90,11 @@ module.exports = {
         .setDescription(
           `A Canvas of Gradient of start ${
             generatedCanvasWithGradient.gradient[0]
-          } and end ${generatedCanvasWithGradient.gradient.pop()}`
+          } and end ${
+            generatedCanvasWithGradient.gradient[
+              generatedCanvasWithGradient.gradient.length - 1
+            ]
+          }`
         )
         .setImage("attachment://image.png")
         .addFields({

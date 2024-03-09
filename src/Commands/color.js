@@ -7,9 +7,9 @@ const canvasImport = require("@napi-rs/canvas");
 module.exports = {
   data: new CommandBuilder()
     .setName("color")
-    .setDescription("Get or generate a color")
+    .setDescription("Get or Generate a Color")
     .addStringOption((option) =>
-      option.setName("color").setDescription("the color code")
+      option.setName("color").setDescription("The Color Code")
     )
     .setCategory("Miscellaneous")
     .setType(CommandTypes.SLASH),

@@ -5,11 +5,11 @@ const CommandTypes = require("../Structures/Enums/CommandTypes.js");
 module.exports = {
   data: new CommandBuilder()
     .setName("ship")
-    .setDescription("ship users and find your love rate!")
+    .setDescription("Ship Users and Find Your Love Rate!")
     .addStringOption((option) =>
       option
         .setName("names")
-        .setDescription("The names/users of the ship, seperated with a comma")
+        .setDescription("The Names/Users of the Ship, Seperated With a Comma")
     )
     .setCategory("Fun")
     .setType(CommandTypes.SLASH),

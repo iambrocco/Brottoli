@@ -8,13 +8,14 @@ const {
   Role,
   Guild,
 } = require("discord.js");
+const fs = require("fs");
 const CommandBuilder = require("../Structures/CommandBuilder.js");
 const CommandTypes = require("../Structures/Enums/CommandTypes.js");
 
 module.exports = {
   data: new CommandBuilder()
     .setName("info")
-    .setDescription("Get info about a specific thing")
+    .setDescription("Get Information About a Specific Thing")
     .setCategory("Miscellaneous")
     .setType(CommandTypes.SLASH)
     .addSubcommand((subcommand) =>
@@ -22,7 +23,7 @@ module.exports = {
         .setName("user")
         .setDescription("Get a User's Info")
         .addUserOption((option) =>
-          option.setName("user").setDescription("The desired user")
+          option.setName("user").setDescription("The Desired User")
         )
     )
     .addSubcommand((subcommand) =>
@@ -32,7 +33,7 @@ module.exports = {
         .addRoleOption((option) =>
           option
             .setName("role")
-            .setDescription("The desired role")
+            .setDescription("The Desired Role")
             .setRequired(true)
         )
     )
@@ -41,11 +42,19 @@ module.exports = {
         .setName("channel")
         .setDescription("Get a Channel's Info")
         .addChannelOption((option) =>
-          option.setName("channel").setDescription("The desired channel")
+          option.setName("channel").setDescription("The Desired Channel")
         )
     )
     .addSubcommand((subcommand) =>
       subcommand.setName("server").setDescription("Get The Server's Info")
+    )
+    .addSubcommand((subcommand) =>
+      subcommand
+        .setName("emoji")
+        .setDescription("Get an Emoji's Info")
+        .addStringOption((option) =>
+          option.setName("emoji").setDescription("The Desired Emoji")
+        )
     ),
   /**
    *
@@ -68,6 +77,8 @@ module.exports = {
     };
     let subcommand = interaction.options.getSubcommand();
     let infoEmbed = new EmbedBuilder();
+    let rolePermsString = "";
+
     switch (subcommand) {
       case "user":
         /**
@@ -129,6 +140,10 @@ module.exports = {
          * @type {Role} role
          */
         let role = interaction.options.getRole("role");
+        let rolePerms = role.permissions.toArray();
+        rolePerms.forEach((rolePerm) => {
+          rolePermsString += `${inlineCode(rolePerm)}${bold(",")} `;
+        });
         infoEmbed
           .setTitle(`${inlineCode(role.name)} Role Info`)
           .addFields(
@@ -153,7 +168,20 @@ module.exports = {
             {
               name: `Role Created At`,
               value: `${codeBlock(role.createdAt.toUTCString())}`,
-            }
+            },
+            {
+              name: `Role Icon URL`,
+              value: `${
+                role.iconURL({ extension: "png" })
+                  ? `[PNG](${role.iconURL({ extension: "png" })})`
+                  : inlineCode("Role Has No Icon")
+              }`,
+              inline: true,
+            },
+            // {
+            //   name: "Role Permissions",
+            //   value: `${rolePermsString}`,
+            // }
           )
           .setColor(role.hexColor);
         break;
@@ -253,7 +281,13 @@ module.exports = {
           )
           .setColor(Colors.Greyple);
         break;
-    }
-    await interaction.reply({ embeds: [infoEmbed] });
+      case "emoji":
+        // TO DO: IMPLEMENT EMOJI INFO
+        infoEmbed.setTitle("WORK IN PROGRESS...")
+        break;
+      }
+    await interaction.reply({
+      embeds: [infoEmbed],
+    });
   },
 };

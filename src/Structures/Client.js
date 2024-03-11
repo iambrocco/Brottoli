@@ -13,19 +13,14 @@ class Client extends discord.Client {
     this.CommandCategories = new Map();
     this.textCommandsPrefix = "!";
   }
-  colorToHex(color, commandType) {
+  colorToHex(color, commandType, interaction) {
     function componentToHex(c) {
       var hex = c.toString(16);
       return hex.length == 1 ? "0" + hex : hex;
     }
     // Remove whitespace and convert to lowercase
     color = color.trim().toLowerCase();
-    if (
-      RegExp("[0-9A-Fa-f]{6}|[0-9A-Fa-f]{3}", "g").test(color) &&
-      color.charAt(0) !== "#"
-    ) {
-      return `#${color}`;
-    }
+
     // Hex shorthand (e.g., #fff)
     if (color.charAt(0) === "#") {
       // Expand shorthand
@@ -47,13 +42,19 @@ class Client extends discord.Client {
       !color.startsWith("rgba") &&
       !color.startsWith("rgb")
     ) {
-      let someNamedColor = namedColors.find(
-        (colorParam) => colorParam.name.toLowerCase() == color
-      );
-      if (!someNamedColor) {
-        return "#000000";
+      try {
+        let someNamedColor = namedColors.find(
+          (colorParam) => colorParam.name.toLowerCase() == color
+        );
+        if (!someNamedColor) {
+          return "#000000";
+        }
+        return someNamedColor.hex;
+      } catch {
+        return color.length == 6 && color.charAt(0) !== "#"
+          ? `#${color}`
+          : color;
       }
-      return someNamedColor.hex;
     }
 
     // RGBA format or RGB format
@@ -70,7 +71,13 @@ class Client extends discord.Client {
     }
 
     // Unsupported format
-    return null;
+    interaction
+      ? interaction.followUp({
+          ephemeral: true,
+          content: `***If you've written a hex color code without the \`#\` it won't work.***`,
+        })
+      : "";
+    return "#000000";
   }
 
   invertColor(hexColor) {

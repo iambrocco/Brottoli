@@ -54,7 +54,7 @@ module.exports = {
           )
           .setMidpoint(midPoints)
           .getColors();
-        gradient.unshift(interaction.client.colorToHex(startColor, "gradient"));
+        gradient.unshift(interaction.client.colorToHex(startColor, "gradient", interaction));
         let canvasSectionheight = canvas.height / gradient.length;
         let colorsString = "";
         for (color in gradient) {

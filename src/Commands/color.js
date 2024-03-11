@@ -19,7 +19,7 @@ module.exports = {
       let color = interaction.options.getString("color");
       let colorEmbed = new EmbedBuilder();
       let generatedColor = color ?? generateRGB();
-      let colorImg = await generateCanvas(interaction.client.colorToHex(generatedColor));
+      let colorImg = await generateCanvas(interaction.client.colorToHex(generatedColor, "", interaction));
       async function generateCanvas(color) {
         let canvas = canvasImport.createCanvas(128, 128);
         let ctx = canvas.getContext("2d");

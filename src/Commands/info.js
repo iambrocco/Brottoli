@@ -177,7 +177,7 @@ module.exports = {
                   : inlineCode("Role Has No Icon")
               }`,
               inline: true,
-            },
+            }
             // {
             //   name: "Role Permissions",
             //   value: `${rolePermsString}`,
@@ -282,10 +282,52 @@ module.exports = {
           .setColor(Colors.Greyple);
         break;
       case "emoji":
+        let emojiString = interaction.options.getString("emoji");
+        let emojiId = emojiString.match(/:(\d+)>$/)[1];
         // TO DO: IMPLEMENT EMOJI INFO
-        infoEmbed.setTitle("WORK IN PROGRESS...")
+        let fetchedEmoji = interaction.guild.emojis.fetch(emojiId);
+        let emoji = await fetchedEmoji;
+        infoEmbed.setTitle(`${inlineCode(emoji.name)} Emoji Info`);
+        infoEmbed.addFields(
+          {
+            name: `Emoji ID`,
+            value: `${codeBlock(emoji.id)}`,
+            inline: false,
+          },
+          {
+            name: `Is Emoji Animated?`,
+            value: `${inlineCode(emoji.animated)}`,
+            inline: true,
+          },
+          {
+            name: `Emoji Identifier`,
+            value: `${inlineCode(emoji.identifier)}`,
+            inline: true,
+          },
+          {
+            name: `Emoji Created At`,
+            value: `${codeBlock(emoji.createdAt)}`,
+            inline: false,
+          },
+          {
+            name: `Is Emoji Available?`,
+            value: `${inlineCode(emoji.available)}`,
+            inline: true,
+          },
+          {
+            name: `Does Emoji Require Colons?`,
+            value: `${inlineCode(emoji.requiresColons)}`,
+            inline: true,
+          },
+          {
+            name: `Is Emoji Managed?`,
+            value: `${inlineCode(emoji.managed)}`,
+            inline: true,
+          }
+        );
+
         break;
-      }
+    }
     await interaction.reply({
       embeds: [infoEmbed],
     });

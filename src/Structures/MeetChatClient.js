@@ -8,6 +8,8 @@ class MeetChatClient {
     this.connectionState = MeetChatConnectionStates.WAITING;
     this.connectedOn = 0;
     this.interaction = interaction;
+    this.guildOne = this.interaction.guildId;
+    this.guildTwo = 0;
   }
 
   async init() {
@@ -30,11 +32,13 @@ class MeetChatClient {
 
         if (!result[0]) {
           this.db.query(
-            `INSERT INTO meetchat (connectionState, channelOneId, channelTwoId, connectedOn) VALUES (?, ?, ?, ?)`,
+            `INSERT INTO meetchat (connectionState, channelOneId, channelTwoId, channelOneGuildId, channelTwoGuildId, connectedOn) VALUES (?, ?, ?, ?, ?, ?)`,
             [
               this.connectionState,
               this.channelOne,
               this.channelTwo,
+              this.guildOne,
+              this.guildTwo,
               this.connectedOn,
             ],
             (err, result) => {
@@ -136,8 +140,15 @@ class MeetChatClient {
             ],
             (err1, reslt) => {
               if (err1) {
-                console.log(err1);
-                return;
+                return this.interaction.reply({
+                  ephemeral: true,
+                  embeds: [
+                    new ErrorEmbed().setError({
+                      name: "An Error Occured",
+                      value: `${err1}`,
+                    }),
+                  ],
+                });
               }
               if (reslt) {
                 this.connectionState = MeetChatConnectionStates.CONNECTED;

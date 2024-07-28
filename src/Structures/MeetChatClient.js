@@ -162,7 +162,6 @@ class MeetChatClient {
       `SELECT * FROM \`meetchat\` WHERE \`channelOneId\` = ? OR \`channelTwoId\` = ?`,
       [channel, channel],
       (err, result) => {
-        console.log(result);
         if (!result || result.length == 0) {
           return this.interaction.reply({
             ephemeral: true,

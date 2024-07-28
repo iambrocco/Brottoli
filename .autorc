@@ -1,0 +1,12 @@
+{
+  "plugins": [
+    "git-tag",
+    "all-contributors",
+    "first-time-contributor",
+    "released"
+  ],
+  "owner": "iambrocco",
+  "repo": "brottoli",
+  "name": "iambrocco",
+  "email": "114592910+iambrocco@users.noreply.github.com",
+}

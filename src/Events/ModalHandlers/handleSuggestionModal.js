@@ -1,5 +1,5 @@
 const { EmbedBuilder, Colors } = require("discord.js");
-
+require("dotenv").config();
 module.exports = {
   name: "interactionCreate",
   /**
@@ -30,7 +30,9 @@ module.exports = {
           name: "Your suggestion was sent",
           value: `It will be reviewed soon..`,
         });
-        interaction.client.channels.cache.get("1056600092360069120").send({embeds: [suggestionEmbed]})
+      interaction.client.channels.cache
+        .get(process.env.suggestions_channelId)
+        .send({ embeds: [suggestionEmbed] });
       interaction.reply({ embeds: [submittedEmbed] });
     }
   },

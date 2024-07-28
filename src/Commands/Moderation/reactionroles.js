@@ -2,6 +2,7 @@ const {
   CommandInteraction,
   EmbedBuilder,
   Colors,
+  PermissionFlagsBits,
 } = require("discord.js");
 const CommandBuilder = require("../../Structures/CommandBuilder.js");
 const CommandTypes = require("../../Structures/Enums/CommandTypes.js");

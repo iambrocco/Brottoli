@@ -17,7 +17,7 @@ module.exports = {
     await interaction.deferReply().then(async () => {
       let color = interaction.options.getString("color");
       let colorEmbed = new EmbedBuilder();
-      let generatedColor = color ?? generateRGB();
+      let generatedColor = color ?? generateRGB().all;
       let colorImg = await generateCanvas(
         colorToHex(generatedColor, "", interaction)
       );

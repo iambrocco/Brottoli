@@ -1,6 +1,6 @@
 const joinLeaveStringValues = require("./joinLeaveStringValues.json");
 const namedColors = require("color-name-list");
-
+const fs = require("fs");
 function processMessage(message) {
   let currentMsg = message;
   for (let key in joinLeaveStringValues.keys) {
@@ -108,12 +108,21 @@ function generateRGB() {
   let b = Math.ceil(Math.random() * 255);
   return { r: r, g: g, b: b, all: `rgb(${r}, ${g}, ${b})` };
 }
+function ensureDirectoryExistence(filePath) {
+  const dirname = path.dirname(filePath);
+  if (fs.existsSync(dirname)) {
+    return true;
+  }
+  ensureDirectoryExistence(dirname);
+  fs.mkdirSync(dirname);
+}
 let reusable = {
   processMessage: processMessage,
   componentToHex: componentToHex,
   colorToHex: colorToHex,
   invertColor: invertColor,
   generateRGB: generateRGB,
+  ensureDirectoryExistence: ensureDirectoryExistence,
   channelTypes: {
     0: "GuildText",
     1: "DM",
@@ -127,7 +136,7 @@ let reusable = {
     13: "GuildStageVoice",
     14: "GuildDirectory",
     15: "GuildForum",
-  }
+  },
 };
 
 module.exports = reusable;

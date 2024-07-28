@@ -1,12 +1,10 @@
 const { SlashCommandBuilder } = require("discord.js");
-
-class CommandBuilder extends SlashCommandBuilder{
+const CommandTypes = require("./Enums/CommandTypes.js");
+class CommandBuilder extends SlashCommandBuilder {
   constructor() {
-    super()
-    this.commandType = "SLASH";
+    super();
+    this.commandType = CommandTypes.SLASH;
     this.category = "Uncategorized";
-    this.commandRank = "FREE";
-    
   }
   /**
    *
@@ -18,20 +16,11 @@ class CommandBuilder extends SlashCommandBuilder{
   }
   /**
    *
-   * @param {"PREMIUM" | "FREE" | "FREEMIUM"} type
-   */
-  setCommandRank(type) {
-    this.commandRank = type;
-    return this;
-  }
-  /**
-   *
    * @param {String} category
    */
   setCategory(category) {
     this.category = category;
     return this;
   }
-  
 }
 module.exports = CommandBuilder;

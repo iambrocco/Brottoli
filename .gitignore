@@ -127,6 +127,3 @@ dist
 .pnp.*
 
 /src/PaidCommands/
-/src/Structures/Enums/MeetChatClientConnectionStates.js
-/src/Structures/MeetChatClient.js
-/src/Commands/meetchat.js

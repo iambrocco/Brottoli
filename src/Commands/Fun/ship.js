@@ -1,7 +1,7 @@
 const { EmbedBuilder, Colors } = require("discord.js");
 const canvasImport = require("@napi-rs/canvas");
-const CommandBuilder = require("../Structures/CommandBuilder.js");
-const CommandTypes = require("../Structures/Enums/CommandTypes.js");
+const CommandBuilder = require("../../Structures/CommandBuilder.js");
+const CommandTypes = require("../../Structures/Enums/CommandTypes.js");
 module.exports = {
   data: new CommandBuilder()
     .setName("ship")

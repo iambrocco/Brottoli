@@ -4,8 +4,8 @@ const {
   TextInputStyle,
   ActionRowBuilder,
 } = require("discord.js");
-const CommandBuilder = require("../Structures/CommandBuilder.js");
-const CommandTypes = require("../Structures/Enums/CommandTypes.js");;
+const CommandBuilder = require("../../Structures/CommandBuilder.js");
+const CommandTypes = require("../../Structures/Enums/CommandTypes.js");;
 
 module.exports = {
   data: new CommandBuilder()

@@ -7,7 +7,7 @@ module.exports = {
    *
    * @param {import("discord.js").StringSelectMenuInteraction} interaction
    */
-  async execute(interaction) {
+  async execute(client, interaction) {
     if (
       interaction.isStringSelectMenu() &&
       interaction.customId == "helpSelectMenu"

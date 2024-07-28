@@ -1,30 +1,22 @@
 // Import
 const CommandBuilder = require("../../Structures/CommandBuilder.js");
 const CommandTypes = require("../../Structures/Enums/CommandTypes.js");
-const {
-  ModalBuilder,
-  TextInputBuilder,
-  ActionRowBuilder,
-  TextInputStyle,
-  Colors,
-  EmbedBuilder,
-} = require("discord.js");
+const { Colors, EmbedBuilder } = require("discord.js");
 const mcData = require("../../Data/minecraft.json");
-const Icons = mcData.Icons;
 // Creating the command
 module.exports = {
   // Exporting the Data
   data: new CommandBuilder()
     .setCategory("Minecraft")
     .setType(CommandTypes.SLASH)
-    .setName("kill")
+    .setName("mckill")
     .setDescription("Kill Someone With a Minecraft Death Message"),
   /**
    *
    * @param {import("discord.js").Interaction} interaction
    * @param {Array} args
    */
-  async execute(interaction, args) {
+  async execute(interaction) {
     let mentionedUser = interaction.options.getMentionable("user")
       ? interaction.options.getMentionable("user")
       : interaction.user;

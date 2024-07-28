@@ -8,15 +8,14 @@ const {
   Role,
   Guild,
 } = require("discord.js");
-const fs = require("fs");
-const CommandBuilder = require("../Structures/CommandBuilder.js");
-const CommandTypes = require("../Structures/Enums/CommandTypes.js");
-
+const CommandBuilder = require("../../Structures/CommandBuilder.js");
+const CommandTypes = require("../../Structures/Enums/CommandTypes.js");
+const { channelTypes } = require("../../Data/reusableFunctions.js");
 module.exports = {
   data: new CommandBuilder()
     .setName("info")
     .setDescription("Get Information About a Specific Thing")
-    .setCategory("Miscellaneous")
+    .setCategory("Moderation")
     .setType(CommandTypes.SLASH)
     .addSubcommand((subcommand) =>
       subcommand
@@ -61,20 +60,6 @@ module.exports = {
    * @param {import("discord.js").Interaction} interaction
    */
   async execute(interaction) {
-    let channelTypes = {
-      0: "GuildText",
-      1: "DM",
-      2: "GuildVoice",
-      3: "GroupDM",
-      4: "GuildCategory",
-      5: "GuildAnnouncement",
-      10: "AnnouncementThread",
-      11: "PublicThread",
-      12: "PrivateThread",
-      13: "GuildStageVoice",
-      14: "GuildDirectory",
-      15: "GuildForum",
-    };
     let subcommand = interaction.options.getSubcommand();
     let infoEmbed = new EmbedBuilder();
     let rolePermsString = "";

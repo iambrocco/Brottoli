@@ -7,8 +7,7 @@ const {
 } = require("discord.js");
 const CommandBuilder = require("../../Structures/CommandBuilder.js");
 const CommandTypes = require("../../Structures/Enums/CommandTypes.js");
-const ms = require("ms");
-
+const ErrorEmbed = require("../../Structures/ErrorEmbed.js");
 module.exports = {
   data: new CommandBuilder()
     .setName("unban")
@@ -53,7 +52,17 @@ module.exports = {
                 ],
               });
             })
-            .catch((err) => console.log(err));
+            .catch((err) =>
+              interaction.reply({
+                ephemeral: true,
+                embeds: [
+                  new ErrorEmbed().setError({
+                    name: "An Error Occured",
+                    value: `${err}`,
+                  }),
+                ],
+              })
+            );
         })()
       : (() => {
           feedBackEmbed

@@ -9,7 +9,7 @@ module.exports = {
    * @param {import("discord.js").Interaction} interaction
    * @returns
    */
-  async execute(interaction) {
+  async execute(client, interaction) {
     if (interaction.isModalSubmit() && interaction.customId == "evalModal") {
       const code = await interaction.fields.getTextInputValue("codeInput");
       let evaled;

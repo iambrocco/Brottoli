@@ -1,31 +1,37 @@
 {
   "dependencies": {
-    "@napi-rs/canvas": "^0.1.45",
-    "color-name-list": "^10.19.0",
-    "discord.js": "^14.13.0",
-    "dotenv": "^16.3.1",
-    "javascript-color-gradient": "^2.4.4",
-    "ms": "^2.1.3"
+    "@napi-rs/canvas": "^0.1.53",
+    "color-name-list": "^10.24.0",
+    "discord.js": "^14.15.3",
+    "dotenv": "^16.4.5",
+    "javascript-color-gradient": "^2.5.0",
+    "ms": "^2.1.3",
+    "mysql2": "^3.11.0"
   },
   "name": "brottoli",
-  "version": "1.0.1",
-  "description": "IamBrocco's Discord Bot, Found on top.gg",
+  "version": "1.1.0",
+  "description": "An Open-Source All-in-One Discord Bot!",
   "main": "src/index.js",
+  "devDependencies": {},
   "scripts": {
-    "test": "npx nodemon src/index.js",
-    "start": "node src/index.js"
+    "test": "npx nodemon src/index.js"
   },
-  "engines": {
-    "node": ">=16.9"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iambrocco/Brottoli.git"
   },
   "keywords": [
     "Discord",
     "Bot",
-    "DiscordBot",
-    "discordjs",
-    "discord.js",
-    "DiscordJsBot"
+    "Userphone",
+    "Discord",
+    "Template",
+    "Discord.JS"
   ],
-  "author": "@iambrocco",
-  "license": "ISC"
+  "author": "IamBrocco",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/iambrocco/Brottoli/issues"
+  },
+  "homepage": "https://github.com/iambrocco/Brottoli#readme"
 }

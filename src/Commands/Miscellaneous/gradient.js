@@ -1,8 +1,9 @@
-const CommandBuilder = require("../Structures/CommandBuilder.js");
-const CommandTypes = require("../Structures/Enums/CommandTypes.js");
+const CommandBuilder = require("../../Structures/CommandBuilder.js");
+const CommandTypes = require("../../Structures/Enums/CommandTypes.js");
 const javascriptColorGradient = require("javascript-color-gradient");
 const canvasImport = require("@napi-rs/canvas");
 const { EmbedBuilder } = require("@discordjs/builders");
+const { colorToHex, invertColor } = require("../../Data/reusableFunctions.js");
 module.exports = {
   data: new CommandBuilder()
     .setName("gradient")
@@ -49,12 +50,12 @@ module.exports = {
       function generateGradientCanvas(startColor, finishColor, midPoints) {
         let gradient = new javascriptColorGradient()
           .setColorGradient(
-            interaction.client.colorToHex(startColor, "gradient"),
-            interaction.client.colorToHex(finishColor, "gradient")
+            colorToHex(startColor, "gradient"),
+            colorToHex(finishColor, "gradient")
           )
           .setMidpoint(midPoints)
           .getColors();
-        gradient.unshift(interaction.client.colorToHex(startColor, "gradient", interaction));
+        gradient.unshift(colorToHex(startColor, "gradient", interaction));
         let canvasSectionheight = canvas.height / gradient.length;
         let colorsString = "";
         for (color in gradient) {
@@ -66,7 +67,7 @@ module.exports = {
             canvasSectionheight
           );
           if (colorText) {
-            ctx.fillStyle = interaction.client.invertColor(gradient[color]);
+            ctx.fillStyle = invertColor(gradient[color]);
             ctx.fillText(
               gradient[color],
               canvas.width / 2.25,

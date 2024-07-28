@@ -156,11 +156,44 @@ class MeetChatClient {
     return this;
   }
 
-  disconnect() {
+  disconnect(channel) {
     this.connectionState = MeetChatConnectionStates.DISCONNECTED;
     this.db.query(
-      `DELETE FROM meetchat WHERE channelOneId = ? OR channelTwoId = ? AND connectionState = ?`,
-      [this.channelOne, this.channelOne, MeetChatConnectionStates.CONNECTED]
+      `SELECT * FROM \`meetchat\` WHERE \`channelOneId\` = ? OR \`channelTwoId\` = ?`,
+      [channel, channel],
+      (err, result) => {
+        console.log(result);
+        if (!result || result.length == 0) {
+          return this.interaction.reply({
+            ephemeral: true,
+            content: `You are not connected to any meetchat party!`,
+          });
+        }
+        if (err) {
+          return this.interaction.reply({
+            ephemeral: true,
+            embeds: [
+              new ErrorEmbed().setError({
+                name: "An Error Occured",
+                value: `${err}`,
+              }),
+            ],
+          });
+        }
+        if (result.length != 0) {
+          this.db.query(
+            `DELETE FROM \`meetchat\` WHERE \`channelOneId\`= ? OR \`channelTwoId\`= ?`,
+            [channel, channel],
+            async (err, result) => {
+              if (result) {
+                return await this.interaction.reply(
+                  `Disconnected from the other party.`
+                );
+              }
+            }
+          );
+        }
+      }
     );
     return this;
   }

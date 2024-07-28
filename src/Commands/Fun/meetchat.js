@@ -27,7 +27,6 @@ module.exports = {
             .setDescription("Get Info About your meetchat connection")
         )
     )
-    
 
     .setType(CommandTypes.SLASH),
   /**
@@ -46,13 +45,13 @@ module.exports = {
           `SELECT * FROM meetchat WHERE channelOneId = ? OR channelTwoId = ?`,
           [interaction.channelId, interaction.channelId],
           async (err, result) => {
-            if (!result) {
+            if (!result || result.length == 0) {
               return await interaction.deferReply().then(async () => {
                 interaction.followUp(`Finding other party...`);
                 meetChatClient.init();
               });
             }
-            if (result) {
+            if (result[1]) {
               return await interaction.reply({
                 ephemeral: true,
                 content: `You are already connected to a meetchat session.`,
@@ -62,10 +61,7 @@ module.exports = {
         );
       }
       if (interaction.options.getSubcommand() == "end") {
-        interaction.deferReply().then(async () => {
-          meetChatClient.disconnect();
-          await interaction.followUp(`Disconnected from the other party.`);
-        });
+        meetChatClient.disconnect(interaction.channelId);
       }
       if (interaction.options.getSubcommand() == "addfriend") {
         interaction.client.db.query(

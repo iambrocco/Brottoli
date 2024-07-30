@@ -15,9 +15,6 @@ module.exports = {
         .setName("join_leave")
         .setDescription(`Setup The Automated Join/Leave messages`)
     )
-    .addSubcommand((command) =>
-      command.setName("levelling").setDescription(`Setup Users' Levelling`)
-    )
     .setCategory("Moderation"),
   /**
    *
@@ -43,28 +40,6 @@ module.exports = {
               )
               .setCustomId(`enablejl`)
               .setPlaceholder("Do You Want Join/Leave Messages?")
-          ),
-        ],
-      });
-    }
-    if (interaction.options.getSubcommand() == "levelling") {
-      await interaction.reply({
-        ephemeral: true,
-        components: [
-          new ActionRowBuilder().addComponents(
-            new StringSelectMenuBuilder()
-              .addOptions(
-                new StringSelectMenuOptionBuilder()
-                  .setValue(`1`)
-                  .setLabel("Enabled")
-                  .setDescription(`Enable Levelling In This Server`),
-                new StringSelectMenuOptionBuilder()
-                  .setValue(`0`)
-                  .setLabel("Disabled")
-                  .setDescription(`Disable Levelling In This Server`)
-              )
-              .setCustomId(`enableLevelling`)
-              .setPlaceholder("Do You Want Levelling In This Server?")
           ),
         ],
       });

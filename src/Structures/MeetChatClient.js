@@ -59,9 +59,10 @@ class MeetChatClient {
           );
         } else {
           this.db.query(
-            `UPDATE meetchat SET channelTwoId = ?, connectionState = ?, connectedOn = ? WHERE channelOneId != ? AND channelTwoId = 0`,
+            `UPDATE meetchat SET channelTwoId = ?, channelTwoGuildId, connectionState = ?, connectedOn = ? WHERE channelOneId != ? AND channelTwoId = 0`,
             [
               this.channelOne,
+              this.guildOne,
               MeetChatConnectionStates.CONNECTED,
               Date.now(),
               this.channelOne,

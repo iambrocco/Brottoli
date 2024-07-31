@@ -2,6 +2,7 @@ const { Message, EmbedBuilder, Colors } = require("discord.js");
 const ErrorEmbed = require("../../Structures/ErrorEmbed.js");
 const Client = require("../../Structures/Client.js");
 const MeetChatClientConnectionStates = require("../../Structures/Enums/MeetChatClientConnectionStates.js");
+const { filterText } = require("../../Data/reusableFunctions.js");
 
 module.exports = {
   name: "messageCreate",
@@ -10,16 +11,17 @@ module.exports = {
    * @param {Message} message
    */
   async execute(client, message) {
-    let msgTemplate = `**${message.author.username}** » ${
-      message.content.length > 1900
-        ? message.content.slice(0, 1950) + `...\n**This Message Doesn't Fit.**`
-        : message.content
+    if (message.author.bot) return;
+    let filtered = filterText(message.content).text;
+    const msgTemplate = `**${message.author.username}** » ${
+      filtered.length > 1900
+        ? filtered.slice(0, 1950) + `...\n**This Message Doesn't Fit.**`
+        : filtered
     }`;
     const db = client.db;
-    if (message.author.bot) return;
 
     db.query(
-      `SELECT * FROM \`meetchat\` WHERE channelOneId = ? OR channelTwoId = ? AND channelTwoId != 0 AND connectionState = ?`,
+      `SELECT * FROM \`meetchat\` WHERE (channelOneId = ? OR channelTwoId = ?) AND channelTwoId != 0 AND connectionState = ?`,
       [
         message.channelId,
         message.channelId,
@@ -27,11 +29,10 @@ module.exports = {
       ],
       async (err, result, fields) => {
         if (err) {
-          interaction.reply({
-            ephemeral: true,
+          return message.channel.send({
             embeds: [
               new ErrorEmbed().setError({
-                name: "An Error Occured",
+                name: "An Error Occurred",
                 value: `${err}`,
               }),
             ],
@@ -40,27 +41,28 @@ module.exports = {
         if (result.length == 0 || !result[0]) {
           return;
         }
-        let files = message.attachments.at(0)
-          ? (() => {
-              let farr = [];
-              message.attachments.forEach((attachment) => {
-                farr.push({
-                  attachment: attachment.url,
-                  name: attachment.name,
-                });
-              });
-              return farr;
-            })()
-          : [];
-        if (result[0].channelOneId == message.channelId) {
-          (
-            await client.channels.fetch(result[0].channelTwoId, { force: true })
-          ).send({ content: msgTemplate, files: files });
-        }
-        if (result[0].channelTwoId == message.channelId) {
-          (
-            await client.channels.fetch(result[0].channelOneId, { force: true })
-          ).send({ content: msgTemplate, files: files });
+
+        const files =
+          message.attachments.size > 0
+            ? message.attachments
+            .filter(attachment => !filterText(attachment.name)) // Exclude bad names
+            .map(attachment => ({
+                attachment: attachment.url,
+                name: attachment.name,
+            })) : [];
+
+        const targetChannelId =
+          result[0].channelOneId == message.channelId
+            ? result[0].channelTwoId
+            : result[0].channelOneId;
+
+        if (targetChannelId == 0) return;
+
+        const targetChannel = await client.channels.fetch(targetChannelId, {
+          force: true,
+        });
+        if (targetChannel) {
+          targetChannel.send({ content: msgTemplate, files: files });
         }
       }
     );

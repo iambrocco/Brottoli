@@ -1,6 +1,8 @@
 const joinLeaveStringValues = require("./joinLeaveStringValues.json");
 const namedColors = require("color-name-list");
+const badWords = require("./badwords.json").badwords;
 const fs = require("fs");
+const path = require("path");
 function processMessage(message) {
   let currentMsg = message;
   for (let key in joinLeaveStringValues.keys) {
@@ -116,12 +118,31 @@ function ensureDirectoryExistence(filePath) {
   ensureDirectoryExistence(dirname);
   fs.mkdirSync(dirname);
 }
+function filterText(text) {
+  const badWordsPattern = new RegExp(badWords.join("|"), "gi");
+
+  return {
+    isBad: badWordsPattern.test(text),
+    text: text.replace(badWordsPattern, (match) => "\\*".repeat(match.length)),
+  };
+}
+function errorLogger(err) {
+  let errorTime = Date.now();
+  let logsPath = path.join(__dirname, "../../Logs/");
+  ensureDirectoryExistence(logsPath);
+  fs.writeFileSync(
+    path.join(logsPath, `${errorTime}.log`),
+    JSON.stringify(err)
+  );
+  console.warn(`An Error Occured, it was written to ${errorTime}.log`);
+}
 let reusable = {
   processMessage: processMessage,
   componentToHex: componentToHex,
   colorToHex: colorToHex,
   invertColor: invertColor,
   generateRGB: generateRGB,
+  errorLogger: errorLogger,
   ensureDirectoryExistence: ensureDirectoryExistence,
   channelTypes: {
     0: "GuildText",
@@ -137,6 +158,7 @@ let reusable = {
     14: "GuildDirectory",
     15: "GuildForum",
   },
+  filterText: filterText,
 };
 
 module.exports = reusable;

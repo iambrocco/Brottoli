@@ -27,6 +27,7 @@ dbpass=YOUR_MYSQL_PASSWORD
 dbuser=YOUR_MYSQL_USERNAME
 dbname=YOUR_DATABASE_NAME
 suggestions_channelId=YOUR_SUGGESTION_CMD_CHANNEL_ID
+bugs_channelId=YOUR_BUGS_CMD_CHANNEL_ID
 ```  
 
 ## 3. Contributions And Suggestions

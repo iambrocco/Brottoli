@@ -1,6 +1,8 @@
 const { EmbedBuilder, Colors } = require("discord.js");
 const ErrorEmbed = require("../Structures/ErrorEmbed.js");
-
+const fs = require("fs");
+const path = require("path");
+const { ensureDirectoryExistence, errorLogger } = require("../Data/reusableFunctions");
 module.exports = {
   name: "interactionCreate",
   /**
@@ -30,7 +32,7 @@ module.exports = {
         });
         await interaction.reply({ embeds: [errorEmbed] });
       } else {
-        await command.execute(interaction);
+        command.execute(interaction).catch(errorLogger);
       }
     }
   },

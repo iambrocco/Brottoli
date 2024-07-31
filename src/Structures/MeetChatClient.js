@@ -1,5 +1,6 @@
 const MeetChatConnectionStates = require("./Enums/MeetChatClientConnectionStates.js");
 const ErrorEmbed = require("./ErrorEmbed.js");
+
 class MeetChatClient {
   constructor(channelOne, db, interaction) {
     this.db = db;
@@ -11,153 +12,108 @@ class MeetChatClient {
     this.guildOne = this.interaction.guildId;
     this.guildTwo = 0;
   }
-
+  handleError(err) {
+    if (err) {
+      this.interaction.reply({
+        ephemeral: true,
+        embeds: [
+          new ErrorEmbed().setError({
+            name: "An Error Occured",
+            value: `${err}`,
+          }),
+        ],
+      });
+      return;
+    }
+  }
   async init() {
     this.db.query(
-      `SELECT * FROM meetchat WHERE connectionState = ?`,
-      [MeetChatConnectionStates.WAITING],
-      (err, result) => {
-        if (err) {
-          this.interaction.reply({
-            ephemeral: true,
-            embeds: [
-              new ErrorEmbed().setError({
-                name: "An Error Occured",
-                value: `${err}`,
-              }),
-            ],
+      `SELECT * FROM meetchat WHERE channelOneId = ? OR channelTwoId = ?`,
+      [this.channelOne, this.channelOne],
+      async (err, result) => {
+        this.handleError(err);
+        if (!result || result.length == 0) {
+          return this.insertChannelOneData().then(() => {
+            this.interaction.reply(`Finding other party...`);
           });
-          return;
         }
-
-        if (!result[0]) {
-          this.db.query(
-            `INSERT INTO meetchat (connectionState, channelOneId, channelTwoId, channelOneGuildId, channelTwoGuildId, connectedOn) VALUES (?, ?, ?, ?, ?, ?)`,
-            [
-              this.connectionState,
-              this.channelOne,
-              this.channelTwo,
-              this.guildOne,
-              this.guildTwo,
-              this.connectedOn,
-            ],
-            (err, result) => {
-              if (err) {
-                this.interaction.reply({
-                  ephemeral: true,
-                  embeds: [
-                    new ErrorEmbed().setError({
-                      name: "An Error Occured",
-                      value: `${err}`,
-                    }),
-                  ],
-                });
-                return;
-              }
-              this.findSecondChannel(); // Moved findSecondChannel here
-            }
-          );
-        } else {
-          this.db.query(
-            `UPDATE meetchat SET channelTwoId = ?, channelTwoGuildId, connectionState = ?, connectedOn = ? WHERE channelOneId != ? AND channelTwoId = 0`,
-            [
-              this.channelOne,
-              this.guildOne,
-              MeetChatConnectionStates.CONNECTED,
-              Date.now(),
-              this.channelOne,
-            ],
-            async (err, result) => {
-              if (err) {
-                this.interaction.reply({
-                  ephemeral: true,
-                  embeds: [
-                    new ErrorEmbed().setError({
-                      name: "An Error Occured",
-                      value: `${err}`,
-                    }),
-                  ],
-                });
-                return;
-              }
-              this.db.query(
-                `SELECT * FROM meetchat WHERE channelOneId = ? OR channelTwoId = ?`,
-                [this.channelOne, this.channelOne],
-                async (err, rest) => {
-                  this.connectionState = MeetChatConnectionStates.CONNECTED;
-                  let connectedMSG = `Connected to the other party! Say Hi!`;
-                  (
-                    await this.interaction.client.channels.fetch(
-                      rest[0].channelOneId
-                    )
-                  ).send(connectedMSG);
-                  (
-                    await this.interaction.client.channels.fetch(
-                      rest[0].channelTwoId
-                    )
-                  ).send(connectedMSG);
-                }
-              );
-            }
-          );
+        if (result.length != 0) {
+          return await this.interaction.reply({
+            ephemeral: true,
+            content: `You are already connected to a meetchat session.`,
+          });
         }
       }
     );
     return this;
   }
-
+  async insertChannelOneData() {
+    this.db.query(
+      `INSERT INTO meetchat (connectionState, channelOneId, channelTwoId, channelOneGuildId, channelTwoGuildId, connectedOn) VALUES (?, ?, ?, ?, ?, ?)`,
+      [
+        this.connectionState,
+        this.channelOne,
+        this.channelTwo,
+        this.guildOne,
+        this.guildTwo,
+        this.connectedOn,
+      ],
+      (err, result) => {
+        this.handleError(err);
+        this.findSecondChannel(); // Moved findSecondChannel here
+      }
+    );
+    return this;
+  }
+  handleConnectionAndSendConnectMessage() {
+    this.db.query(
+      `SELECT * FROM meetchat WHERE (channelOneId = ? OR channelTwoId = ?) AND channelOneGuildId != channelTwoGuildId`,
+      [this.channelOne, this.channelOne],
+      async (err, result) => {
+        this.handleError(err);
+        if (!result || result.length == 0) return this.init();
+        this.connectionState = MeetChatConnectionStates.CONNECTED;
+        let connectedMSG = `Connected to the other party! Say Hi!`;
+        (
+          await this.interaction.client.channels.fetch(result[0].channelOneId)
+        ).send(connectedMSG);
+        (
+          await this.interaction.client.channels.fetch(result[0].channelTwoId)
+        ).send(connectedMSG);
+      }
+    );
+  }
   findSecondChannel() {
     this.db.query(
-      `SELECT * FROM meetchat WHERE connectionState = ?`,
-      [MeetChatConnectionStates.WAITING],
-      (err, res) => {
-        if (err) {
-          this.interaction.reply({
-            ephemeral: true,
-            embeds: [
-              new ErrorEmbed().setError({
-                name: "An Error Occured",
-                value: `${err}`,
-              }),
-            ],
-          });
-          return;
-        }
+      `SELECT * FROM meetchat WHERE connectionState = ? AND channelOneGuildId != ? LIMIT 1`,
+      [MeetChatConnectionStates.WAITING, this.guildOne],
+      (err, result) => {
+        this.handleError(err);
 
-        if (res.length >= 2) {
+        if (result.length === 1) {
           this.connectedOn = Date.now();
-          this.channelTwo =
-            res[0].channelOneId === this.channelOne
-              ? res[1].channelOneId
-              : res[0].channelOneId;
-
+          this.channelTwo = result[0].channelOneId;
+          this.guildTwo = result[0].channelOneGuildId;
           this.db.query(
-            `UPDATE meetchat SET channelTwoId = ?, connectionState = ?, connectedOn = ? WHERE channelOneId = ?`,
+            `UPDATE meetchat SET channelTwoId = ?, channelTwoGuildId = ?, connectionState = ?, connectedOn = ? WHERE channelOneId = ? AND channelOneGuildId = ? AND channelTwoId = 0`,
             [
-              this.channelTwo, // Updated to set channelTwo correctly
+              this.channelTwo, // Updated to set channelTwo correctly,
+              this.guildTwo,
               MeetChatConnectionStates.CONNECTED,
               this.connectedOn,
               this.channelOne,
+              this.guildOne,
             ],
-            (err1, reslt) => {
-              if (err1) {
-                return this.interaction.reply({
-                  ephemeral: true,
-                  embeds: [
-                    new ErrorEmbed().setError({
-                      name: "An Error Occured",
-                      value: `${err1}`,
-                    }),
-                  ],
-                });
-              }
+            (err, reslt) => {
+              this.handleError(err);
               if (reslt) {
-                this.connectionState = MeetChatConnectionStates.CONNECTED;
-                console.log(
-                  "Connection established between channels:",
-                  this.channelOne,
-                  this.channelTwo
+                this.db.query(
+                  `DELETE FROM meetchat WHERE channelOneId = ? AND channelTwoId = 0`,
+                  [this.channelTwo],
+                  this.handleError
                 );
+                this.connectionState = MeetChatConnectionStates.CONNECTED;
+                this.handleConnectionAndSendConnectMessage();
               }
             }
           );
@@ -173,29 +129,29 @@ class MeetChatClient {
     this.db.query(
       `SELECT * FROM \`meetchat\` WHERE \`channelOneId\` = ? OR \`channelTwoId\` = ?`,
       [channel, channel],
-      (err, result) => {
+      async (err, result) => {
         if (!result || result.length == 0) {
           return this.interaction.reply({
             ephemeral: true,
             content: `You are not connected to any meetchat party!`,
           });
         }
-        if (err) {
-          return this.interaction.reply({
-            ephemeral: true,
-            embeds: [
-              new ErrorEmbed().setError({
-                name: "An Error Occured",
-                value: `${err}`,
-              }),
-            ],
-          });
-        }
+        this.handleError(err);
         if (result.length != 0) {
+          let disconnectedMSG = `The Other Party Ended The Connection.`;
+          result[0].channelOneId == channel && result[0].channelTwoId != 0
+            ? (
+                await this.interaction.client.channels.fetch(
+                  result[0].channelTwoId
+                )
+              ).send(disconnectedMSG)
+            : "";
+
           this.db.query(
             `DELETE FROM \`meetchat\` WHERE \`channelOneId\`= ? OR \`channelTwoId\`= ?`,
             [channel, channel],
             async (err, result) => {
+              this.handleError(err);
               if (result) {
                 return await this.interaction.reply(
                   `Disconnected from the other party.`

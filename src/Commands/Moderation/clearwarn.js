@@ -41,7 +41,7 @@ module.exports = {
     const amntopt = interaction.options.getString("amount");
     const amountOption = isNaN(parseInt(amntopt)) ? amntopt : parseInt(amntopt);
     const feedBackEmbed = new EmbedBuilder().setColor(Colors.Green);
-    if(isNaN(amountOption) || amountOption !== "all") return interaction.reply({ephemeral:true, content:`**Please specify an actual amount of warns (\`all\` or \`Any Int\`)**`})
+    if(isNaN(amountOption) && amountOption !== "all") return interaction.reply({ephemeral:true, content:`**Please specify an actual amount of warns (\`all\` or \`Any Int\`)**`})
     client.db.query(
       `SELECT * FROM warns WHERE userId = ${memberOption.id} AND guildId = ${interaction.guildId}`,
       async (err, resultArr, fields) => {

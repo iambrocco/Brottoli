@@ -41,24 +41,7 @@ module.exports = {
     );
     if (interaction.options.getSubcommandGroup() == "connection") {
       if (interaction.options.getSubcommand() == "start") {
-        interaction.client.db.query(
-          `SELECT * FROM meetchat WHERE channelOneId = ? OR channelTwoId = ?`,
-          [interaction.channelId, interaction.channelId],
-          async (err, result) => {
-            if (!result || result.length == 0) {
-              return await interaction.deferReply().then(async () => {
-                interaction.followUp(`Finding other party...`);
-                meetChatClient.init();
-              });
-            }
-            if (result[1]) {
-              return await interaction.reply({
-                ephemeral: true,
-                content: `You are already connected to a meetchat session.`,
-              });
-            }
-          }
-        );
+        meetChatClient.init()
       }
       if (interaction.options.getSubcommand() == "end") {
         meetChatClient.disconnect(interaction.channelId);

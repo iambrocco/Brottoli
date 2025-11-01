@@ -1,5 +1,4 @@
-const { EmbedBuilder, Colors, Embed, inlineCode } = require("discord.js");
-const ErrorEmbed = require("../../Structures/ErrorEmbed.js");
+const { EmbedBuilder, Colors } = require("discord.js");
 
 module.exports = {
   name: "interactionCreate",

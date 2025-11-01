@@ -7,7 +7,6 @@ const {
 } = require("discord.js");
 const CommandBuilder = require("../../Structures/CommandBuilder.js");
 const CommandTypes = require("../../Structures/Enums/CommandTypes.js");
-const ms = require("ms");
 
 module.exports = {
   data: new CommandBuilder()

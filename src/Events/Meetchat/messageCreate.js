@@ -1,4 +1,4 @@
-const { Message, EmbedBuilder, Colors } = require("discord.js");
+const { Message } = require("discord.js");
 const ErrorEmbed = require("../../Structures/ErrorEmbed.js");
 const Client = require("../../Structures/Client.js");
 const MeetChatClientConnectionStates = require("../../Structures/Enums/MeetChatClientConnectionStates.js");

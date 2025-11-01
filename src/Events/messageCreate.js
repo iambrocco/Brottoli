@@ -1,4 +1,4 @@
-const { Message, EmbedBuilder, Colors } = require("discord.js");
+const { Message } = require("discord.js");
 const ErrorEmbed = require("../Structures/ErrorEmbed.js");
 
 module.exports = {

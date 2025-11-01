@@ -1,7 +1,4 @@
-const { EmbedBuilder, Colors } = require("discord.js");
 const ErrorEmbed = require("../Structures/ErrorEmbed.js");
-const fs = require("fs");
-const path = require("path");
 module.exports = {
   name: "interactionCreate",
   /**
@@ -16,7 +13,7 @@ module.exports = {
     db.query(
       `SELECT * FROM \`guilds\` WHERE guildId = ?`,
       [interaction.guildId],
-      (err, result, fields) => {
+      (err, result) => {
         if (err) {
           client.log(err, "error");
           return;

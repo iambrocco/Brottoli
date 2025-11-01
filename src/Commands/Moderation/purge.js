@@ -1,6 +1,5 @@
 // Import
 const {
-  GuildMember,
   EmbedBuilder,
   Colors,
   PermissionFlagsBits,

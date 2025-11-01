@@ -2,7 +2,6 @@ const { EmbedBuilder, Colors } = require("discord.js");
 const ErrorEmbed = require("../Structures/ErrorEmbed.js");
 const fs = require("fs");
 const path = require("path");
-const { ensureDirectoryExistence, errorLogger } = require("../Data/reusableFunctions");
 module.exports = {
   name: "interactionCreate",
   /**
@@ -10,11 +9,18 @@ module.exports = {
    * @param {import("discord.js").Interaction} interaction
    */
   async execute(client, interaction) {
+    /**
+     * @type {import("mysql2").Connection}
+     */
     const db = client.db;
     db.query(
       `SELECT * FROM \`guilds\` WHERE guildId = ?`,
       [interaction.guildId],
       (err, result, fields) => {
+        if (err) {
+          client.log(err, "error");
+          return;
+        }
         if (!result[0] || result.length == 0) {
           db.query(
             "INSERT INTO `guilds`(`guildId`, `joinLeaveEnabled`, `customConfig`) VALUES (?, ?, ?)",
@@ -32,7 +38,9 @@ module.exports = {
         });
         await interaction.reply({ embeds: [errorEmbed] });
       } else {
-        command.execute(interaction).catch(errorLogger);
+        command.execute(interaction).catch((err) => {
+          client.log(err, "error");
+        });
       }
     }
   },

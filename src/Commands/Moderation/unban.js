@@ -12,15 +12,15 @@ module.exports = {
   data: new CommandBuilder()
     .setName("unban")
     .setDescription("Unban a Member")
+    .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers)
+    .setCategory("Moderation")
+    .setType(CommandTypes.SLASH)
     .addUserOption((option) =>
       option
         .setName("user")
         .setDescription("The User You Want to Unban")
         .setRequired(true)
-    )
-    .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers)
-    .setCategory("Moderation")
-    .setType(CommandTypes.SLASH),
+    ),
   /**
    *
    * @param {import("discord.js").Interaction} interaction

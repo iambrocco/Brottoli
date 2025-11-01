@@ -213,7 +213,6 @@ module.exports = {
             return bothNotDiscord();
           })()
         : (async () => {
-            console.log("read");
             return await bothDiscord(interaction);
           })();
     }
@@ -245,7 +244,7 @@ module.exports = {
         })
         .catch((error) => {
           interaction.editReply("An Error Occured");
-          console.log(error);
+          interaction.client.log(error);
         });
     });
   },

@@ -50,13 +50,13 @@ module.exports = {
                   }
                 });
             } else {
-              console.log("err");
+              client.log("err");
             }
           }
         }
       );
     } catch (error) {
-      console.log(`Error`);
+      client.log(`Error`);
     }
   },
 };

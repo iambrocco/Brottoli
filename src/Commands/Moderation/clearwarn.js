@@ -8,7 +8,7 @@ const {
 const CommandBuilder = require("../../Structures/CommandBuilder.js");
 const CommandTypes = require("../../Structures/Enums/CommandTypes.js");
 const Client = require("../../Structures/Client.js");
-
+const ErrorEmbed = require("../../Structures/ErrorEmbed.js");
 module.exports = {
   data: new CommandBuilder()
     .setName("clearwarn")
@@ -37,6 +37,8 @@ module.exports = {
     /**
      * @type {GuildMember}
      */
+    if(!interaction.client.isDatabaseConnected()) return interaction.reply({ephemeral: true, embeds: [new ErrorEmbed().setError({name: 'Database Error', value: 'The database is not connected.'})]});
+
     const memberOption = interaction.options.getMentionable("user");
     const amntopt = interaction.options.getString("amount");
     const amountOption = isNaN(parseInt(amntopt)) ? amntopt : parseInt(amntopt);

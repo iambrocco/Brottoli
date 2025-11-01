@@ -119,30 +119,20 @@ function ensureDirectoryExistence(filePath) {
   fs.mkdirSync(dirname);
 }
 function filterText(text) {
-  const badWordsPattern = new RegExp(badWords.join("|"), "gi");
+  const badWordsPattern = new RegExp(`\\b(${badWords.join("|")})\\b`, "gi");
 
   return {
     isBad: badWordsPattern.test(text),
     text: text.replace(badWordsPattern, (match) => "\\*".repeat(match.length)),
   };
 }
-function errorLogger(err) {
-  let errorTime = Date.now();
-  let logsPath = path.join(__dirname, "../../Logs/");
-  ensureDirectoryExistence(logsPath);
-  fs.writeFileSync(
-    path.join(logsPath, `${errorTime}.log`),
-    JSON.stringify(err)
-  );
-  console.warn(`An Error Occured, it was written to ${errorTime}.log`);
-}
+
 let reusable = {
   processMessage: processMessage,
   componentToHex: componentToHex,
   colorToHex: colorToHex,
   invertColor: invertColor,
   generateRGB: generateRGB,
-  errorLogger: errorLogger,
   ensureDirectoryExistence: ensureDirectoryExistence,
   channelTypes: {
     0: "GuildText",

@@ -2,6 +2,7 @@ const { CommandInteraction, EmbedBuilder } = require("discord.js");
 const CommandBuilder = require("../../Structures/CommandBuilder.js");
 const CommandTypes = require("../../Structures/Enums/CommandTypes.js");
 const MeetChatClient = require("../../Structures/MeetChatClient.js");
+const ErrorEmbed = require("../../Structures/ErrorEmbed.js");
 module.exports = {
   data: new CommandBuilder()
     .setName("meetchat")
@@ -9,22 +10,22 @@ module.exports = {
     .setCategory("Fun")
     .addSubcommandGroup((subcommandGroup) =>
       subcommandGroup
-        .setName("connection")
+        .setName("call")
         .setDescription("MeetChat Connection Related Commands")
         .addSubcommand((subcommand) =>
           subcommand
             .setName("start")
-            .setDescription("Start a meetchat connection")
+            .setDescription("Start a meetchat call")
         )
         .addSubcommand((subcommand) =>
           subcommand
             .setName("end")
-            .setDescription("End your meetchat connection (hang-up)")
+            .setDescription("End your meetchat call (hang-up)")
         )
         .addSubcommand((subcommand) =>
           subcommand
             .setName("addfriend")
-            .setDescription("Get Info About your meetchat connection")
+            .setDescription("Request The Other Party to be your friend")
         )
     )
 
@@ -34,12 +35,14 @@ module.exports = {
    * @param {CommandInteraction} interaction
    */
   async execute(interaction) {
+    if(!interaction.client.isDatabaseConnected()) return interaction.reply({ephemeral: true, embeds: [new ErrorEmbed().setError({name: 'Database Error', value: 'The database is not connected.'})]});
+
     let meetChatClient = new MeetChatClient(
       interaction.channelId,
       interaction.client.db,
       interaction
     );
-    if (interaction.options.getSubcommandGroup() == "connection") {
+    if (interaction.options.getSubcommandGroup() == "call") {
       if (interaction.options.getSubcommand() == "start") {
         meetChatClient.init()
       }

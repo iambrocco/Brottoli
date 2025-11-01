@@ -6,6 +6,7 @@ const {
 } = require("discord.js");
 const CommandBuilder = require("../../Structures/CommandBuilder.js");
 const CommandTypes = require("../../Structures/Enums/CommandTypes.js");
+const ErrorEmbed = require("../../Structures/ErrorEmbed.js");
 module.exports = {
   data: new CommandBuilder()
     .setName("reactionroles")
@@ -73,6 +74,8 @@ module.exports = {
    * @param {CommandInteraction} interaction
    */
   async execute(interaction) {
+    if(!interaction.client.isDatabaseConnected()) return interaction.reply({ephemeral: true, embeds: [new ErrorEmbed().setError({name: 'Database Error', value: 'The database is not connected.'})]});
+
     await interaction.deferReply();
     const subcommand = interaction.options.getSubcommand();
     subcommand == "add"

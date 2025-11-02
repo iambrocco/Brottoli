@@ -48,9 +48,9 @@ module.exports = {
 
     )
 
-    const message = await interaction.reply({ embeds: [embed], components: [row], fetchReply: true });
+    const response = await interaction.reply({ embeds: [embed], components: [row], withResponse: true });
 
     if (!interaction.client.partySessions) interaction.client.partySessions = new Map();
-    interaction.client.partySessions.set(message.id, { type: "truthordare", choice });
+    interaction.client.partySessions.set(response.resource.message.id, { type: "truthordare", choice });
   },
 };

@@ -25,10 +25,10 @@ module.exports = {
         .setStyle(ButtonStyle.Primary)
     );
 
-    const message = await interaction.reply({ embeds: [embed], components: [row], fetchReply: true });
+    const response = await interaction.reply({ embeds: [embed], components: [row], withResponse: true });
 
     // Save session
     if (!interaction.client.partySessions) interaction.client.partySessions = new Map();
-    interaction.client.partySessions.set(message.id, { type: "neverhaveiever" });
+    interaction.client.partySessions.set(response.resource.message.id, { type: "neverhaveiever" });
   },
 };

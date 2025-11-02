@@ -34,9 +34,9 @@ module.exports = {
       new ButtonBuilder().setCustomId("trivia_next").setLabel("🔄 Next").setStyle(ButtonStyle.Secondary)
     );
 
-    const message = await interaction.reply({ embeds: [embed], components: [row], fetchReply: true });
+    const response = await interaction.reply({ embeds: [embed], components: [row], withResponse: true });
 
     if (!interaction.client.partySessions) interaction.client.partySessions = new Map();
-    interaction.client.partySessions.set(message.id, { type: "trivia", questionObj });
+    interaction.client.partySessions.set(response.resource.message.id, { type: "trivia", questionObj });
   },
 };

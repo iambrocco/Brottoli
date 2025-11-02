@@ -1,5 +1,7 @@
+const { Events } = require("discord.js");
+
 module.exports = {
-  name: "error",
+  name: Events.Error,
   /**
    *
    * @param {import("discord.js").DiscordjsError} error

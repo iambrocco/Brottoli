@@ -2,6 +2,7 @@ const {
   ActionRowBuilder,
   StringSelectMenuBuilder,
   StringSelectMenuOptionBuilder,
+  MessageFlags
 } = require("discord.js");
 const CommandBuilder = require("../../Structures/CommandBuilder.js");
 const CommandTypes = require("../../Structures/Enums/CommandTypes.js");
@@ -22,12 +23,12 @@ module.exports = {
    * @param {import("discord.js").Interaction} interaction
    */
   async execute(interaction) {
-    if (!interaction.client.isDatabaseConnected()) return interaction.reply({ ephemeral: true, embeds: [new ErrorEmbed().setError({ name: 'Database Error', value: 'The database is not connected.' })] });
+    if (!interaction.client.isDatabaseConnected()) return interaction.reply({ flags: MessageFlags.Ephemeral, embeds: [new ErrorEmbed().setError({ name: 'Database Error', value: 'The database is not connected.' })] });
 
-    interaction.client.db.query(`UPDATE guilds SET customConfig = 1`);
+    interaction.client.db.query(`UPDATE guilds SET customConfig = 1 WHERE guildId = ?`, [interaction.guildId]);
     if (interaction.options.getSubcommand() == "join_leave") {
       await interaction.reply({
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
         components: [
           new ActionRowBuilder().addComponents(
             new StringSelectMenuBuilder()

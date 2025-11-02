@@ -4,6 +4,7 @@ const {
   EmbedBuilder,
   Colors,
   PermissionFlagsBits,
+  MessageFlags
 } = require("discord.js");
 const CommandBuilder = require("../../Structures/CommandBuilder.js");
 const CommandTypes = require("../../Structures/Enums/CommandTypes.js");
@@ -45,7 +46,7 @@ module.exports = {
       interaction.options.getString("reason") || "No Reason Provided";
 
     const feedBackEmbed = new EmbedBuilder().setColor(Colors.Green);
-    if (!interaction.client.isDatabaseConnected()) return interaction.reply({ ephemeral: true, embeds: [new ErrorEmbed().setError({ name: 'Database Error', value: 'The database is not connected.' })] });
+    if (!interaction.client.isDatabaseConnected()) return interaction.reply({ flags: MessageFlags.Ephemeral, embeds: [new ErrorEmbed().setError({ name: 'Database Error', value: 'The database is not connected.' })] });
 
     client.db.query(
       `SELECT * FROM warns WHERE userId = ${memberOption.id} AND guildId = ${interaction.guildId}`,
@@ -67,9 +68,9 @@ module.exports = {
             }
           );
         } else {
-          const newCount = result.warnCount + 1;
+          const newCount = result.count + 1;
           client.db.query(
-            `UPDATE warns SET warnCount = ${newCount}, reason = "${result.reason.length > 0 ? result.reason + "," + reason : reason
+            `UPDATE warns SET count = ${newCount}, reason = "${result.reason.length > 0 ? result.reason + "," + reason : reason
             }" WHERE userId = ${memberOption.id} AND guildId = ${interaction.guildId
             }`,
             (err, updatedResult) => {

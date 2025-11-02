@@ -8,7 +8,8 @@
     "javascript-color-gradient": "^2.5.0",
     "ms": "^2.1.3",
     "mysql2": "^3.11.0",
-    "nodemon": "^3.1.4"
+    "nodemon": "^3.1.4",
+    "party-game-sentences": "^1.2.10"
   },
   "name": "brottoli",
   "version": "1.1.0",

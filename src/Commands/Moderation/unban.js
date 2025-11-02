@@ -4,6 +4,7 @@ const {
   EmbedBuilder,
   Colors,
   PermissionFlagsBits,
+  MessageFlags
 } = require("discord.js");
 const CommandBuilder = require("../../Structures/CommandBuilder.js");
 const CommandTypes = require("../../Structures/Enums/CommandTypes.js");
@@ -54,7 +55,7 @@ module.exports = {
             })
             .catch((err) =>
               interaction.reply({
-                ephemeral: true,
+                flags: MessageFlags.Ephemeral,
                 embeds: [
                   new ErrorEmbed().setError({
                     name: "An Error Occured",

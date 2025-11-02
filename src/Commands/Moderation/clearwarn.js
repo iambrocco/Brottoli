@@ -4,6 +4,7 @@ const {
   EmbedBuilder,
   Colors,
   PermissionFlagsBits,
+  MessageFlags
 } = require("discord.js");
 const CommandBuilder = require("../../Structures/CommandBuilder.js");
 const CommandTypes = require("../../Structures/Enums/CommandTypes.js");
@@ -37,7 +38,7 @@ module.exports = {
     /**
      * @type {GuildMember}
      */
-    if(!interaction.client.isDatabaseConnected()) return interaction.reply({ephemeral: true, embeds: [new ErrorEmbed().setError({name: 'Database Error', value: 'The database is not connected.'})]});
+    if(!interaction.client.isDatabaseConnected()) return interaction.reply({flags: MessageFlags.Ephemeral, embeds: [new ErrorEmbed().setError({name: 'Database Error', value: 'The database is not connected.'})]});
 
     const memberOption = interaction.options.getMentionable("user");
     const amntopt = interaction.options.getString("amount");
@@ -62,11 +63,11 @@ module.exports = {
                 .setColor(Colors.Red)
                 .setTitle(`Member has no warns!`),
             ],
-            ephemeral: true,
+            flags: MessageFlags.Ephemeral,
           });
         }
         if (result) {
-          const newCount = result.warnCount <= 0 ? 0 : result.warnCount - (!isNaN(amountOption) ? Math.abs(amountOption) : amountOption == "all" ? result.warnCount : 0);
+          const newCount = result.count <= 0 ? 0 : result.count - (!isNaN(amountOption) ? Math.abs(amountOption) : amountOption == "all" ? result.count : 0);
           /**
            * @type {Array}
            */
@@ -79,7 +80,7 @@ module.exports = {
           client.db.query(
             newCount == 0 || amountOption == "all"
               ? `DELETE FROM warns WHERE userId = ${memberOption.id} AND guildId = ${interaction.guildId}`
-              : `UPDATE warns SET warnCount = ${newCount}, reason = "${newReason}" WHERE userId = ${
+              : `UPDATE warns SET count = ${newCount}, reason = "${newReason}" WHERE userId = ${
                   memberOption.id
                 } AND guildId = ${interaction.guildId}`,
             (err, updatedResult) => {

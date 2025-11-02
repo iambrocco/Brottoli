@@ -9,6 +9,8 @@ const {
   TextInputBuilder,
   TextInputStyle,
   inlineCode,
+  Events,
+  MessageFlags
 } = require("discord.js");
 
 const ErrorEmbed = require("../../Structures/ErrorEmbed.js");
@@ -16,7 +18,7 @@ const ErrorEmbed = require("../../Structures/ErrorEmbed.js");
 const guildSettings = new Map();
 
 module.exports = {
-  name: "interactionCreate",
+  name: Events.InteractionCreate,
   /**
    *
    * @param {import("discord.js").Interaction} interaction
@@ -32,14 +34,14 @@ module.exports = {
       if (enabled === "0") {
         return interaction.reply({
           content: "Join/Leave Messages Were Successfully Disabled",
-          ephemeral: true,
+          flags: MessageFlags.Ephemeral,
         });
       }
       if (enabled === "1") {
         guildSettings.set(interaction.guildId, { enabled: true });
         return interaction.reply({
           content: "Please select a join message channel",
-          ephemeral: true,
+          flags: MessageFlags.Ephemeral,
           components: [
             new ActionRowBuilder().addComponents(
               new ChannelSelectMenuBuilder()
@@ -61,7 +63,7 @@ module.exports = {
 
         return interaction.reply({
           content: "Please select a leave message channel",
-          ephemeral: true,
+          flags: MessageFlags.Ephemeral,
           components: [
             new ActionRowBuilder().addComponents(
               new ChannelSelectMenuBuilder()
@@ -97,7 +99,7 @@ module.exports = {
     if (
       interaction.isButton() &&
       interaction.customId ===
-        `setJoinLeaveMessagesButton_${interaction.guildId}`
+      `setJoinLeaveMessagesButton_${interaction.guildId}`
     ) {
       return interaction.showModal(
         new ModalBuilder()
@@ -151,11 +153,11 @@ module.exports = {
               }
             ),
         ],
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       });
 
       db.query(
-        `SELECT * FROM join_leave WHERE guildId = ?`,
+        `SELECT * FROM guilds WHERE guildId = ?`,
         [interaction.guildId],
         (err, reslt) => {
           if (err) {
@@ -164,36 +166,39 @@ module.exports = {
           }
           if (reslt.length > 0) {
             db.query(
-              `UPDATE \`join_leave\` SET \`joinChannelId\`=?,\`leaveChannelId\`=?,\`guildId\`=?,\`joinMessage\`=?,\`leaveMessage\`=?,\`enabled\`=?`,
+              `UPDATE \`guilds\` SET \`join_channel\`=?,\`leave_channel\`=?,\`join_message\`=?,\`leave_message\`=? WHERE \`guildId\`=?`,
               [
                 guildData.joinChannelId,
                 guildData.leaveChannelId,
-                interaction.guildId,
                 joinmsg,
                 leavemsg,
-                "1",
+                interaction.guildId,
               ],
               (insertErr) => {
                 if (insertErr) {
-                  interaction.reply({ephemeral: true, embeds: [new ErrorEmbed().setError({name: 'An Error Occured', value: `${insertErr}`})]})
+                  interaction.reply({ flags: MessageFlags.Ephemeral, embeds: [new ErrorEmbed().setError({ name: 'An Error Occured', value: `${insertErr}` })] })
                 }
               }
             );
           }
           if (!reslt || reslt.length === 0) {
             db.query(
-              `INSERT INTO join_leave (joinChannelId, leaveChannelId, guildId, joinMessage, leaveMessage, enabled) VALUES (?, ?, ?, ?, ?, ?)`,
+              `INSERT INTO \`guilds\`(\`guildId\`, \`timezone\`, \`customConfig\`, \`premium\`, \`join_message\`, \`join_channel\`, \`leave_message\`, \`leave_channel\`, \`modlogs_channel\`, \`sugesstions_channel\`) VALUES (?,?,?,?,?,?,?,?,?,?)`,
               [
-                guildData.joinChannelId,
-                guildData.leaveChannelId,
                 interaction.guildId,
+                "UTC",
+                0,
+                0,
                 joinmsg,
+                guildData.joinChannelId,
                 leavemsg,
-                "1",
+                guildData.leaveChannelId,
+                0,
+                0
               ],
               (insertErr) => {
                 if (insertErr) {
-                  interaction.reply({ephemeral: true, embeds: [new ErrorEmbed().setError({name: 'An Error Occured', value: `${insertErr}`})]})
+                  interaction.reply({ flags: MessageFlags.Ephemeral, embeds: [new ErrorEmbed().setError({ name: 'An Error Occured', value: `${insertErr}` })] })
                 }
               }
             );

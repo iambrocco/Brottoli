@@ -1,9 +1,9 @@
-const { EmbedBuilder } = require("discord.js");
+const { EmbedBuilder, Events } = require("discord.js");
 const { inspect } = require("util");
 const vm = require("vm");
 const ErrorEmbed = require("../../Structures/ErrorEmbed.js")
 module.exports = {
-  name: "interactionCreate",
+  name: Events.InteractionCreate,
   /**
    *
    * @param {import("discord.js").Interaction} interaction

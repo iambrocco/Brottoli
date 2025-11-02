@@ -1,4 +1,4 @@
-const { CommandInteraction, EmbedBuilder } = require("discord.js");
+const { CommandInteraction, EmbedBuilder, MessageFlags } = require("discord.js");
 const CommandBuilder = require("../../Structures/CommandBuilder.js");
 const CommandTypes = require("../../Structures/Enums/CommandTypes.js");
 const MeetChatClient = require("../../Structures/MeetChatClient.js");
@@ -35,7 +35,7 @@ module.exports = {
    * @param {CommandInteraction} interaction
    */
   async execute(interaction) {
-    if(!interaction.client.isDatabaseConnected()) return interaction.reply({ephemeral: true, embeds: [new ErrorEmbed().setError({name: 'Database Error', value: 'The database is not connected.'})]});
+    if(!interaction.client.isDatabaseConnected()) return interaction.reply({flags: MessageFlags.Ephemeral, embeds: [new ErrorEmbed().setError({name: 'Database Error', value: 'The database is not connected.'})]});
 
     let meetChatClient = new MeetChatClient(
       interaction.channelId,
@@ -56,7 +56,7 @@ module.exports = {
           async (err, result) => {
             if (!result) {
               await interaction.reply({
-                ephemeral: true,
+                flags: MessageFlags.Ephemeral,
                 content: `You are not connected to any meetchat session.`,
               });
             }

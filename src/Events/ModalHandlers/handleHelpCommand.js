@@ -1,7 +1,7 @@
-const { EmbedBuilder, Colors } = require("discord.js");
+const { EmbedBuilder, Colors, Events, MessageFlags } = require("discord.js");
 
 module.exports = {
-  name: "interactionCreate",
+  name: Events.InteractionCreate,
   /**
    *
    * @param {import("discord.js").StringSelectMenuInteraction} interaction
@@ -45,7 +45,7 @@ module.exports = {
       });
       interaction
         .reply({
-          ephemeral: true,
+          flags: MessageFlags.Ephemeral,
           content: "** **",
         })
         .then((message) => {

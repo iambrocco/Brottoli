@@ -1,6 +1,6 @@
 // Import
-const CommandBuilder = require("../../Structures/CommandBuilder.js");
-const CommandTypes = require("../../Structures/Enums/CommandTypes.js");
+const CommandBuilder = require("../../../Structures/CommandBuilder.js");
+const CommandTypes = require("../../../Structures/Enums/CommandTypes.js");
 const {
   ModalBuilder,
   TextInputBuilder,
@@ -8,8 +8,9 @@ const {
   TextInputStyle,
   Colors,
   EmbedBuilder,
+  MessageFlags
 } = require("discord.js");
-const mcData = require("../../Data/minecraft.json");
+const mcData = require("../../../Data/minecraft.json");
 const Icons = mcData.Icons;
 // Creating the command
 module.exports = {
@@ -114,7 +115,7 @@ module.exports = {
       });
       await interaction.reply({
         embeds: [firstIconsEmbed, secondIconsEmbed, thirdIconsEmbed],
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       });
     }
   },

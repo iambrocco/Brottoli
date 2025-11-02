@@ -1,8 +1,8 @@
-const { User } = require("discord.js");
+const { User, Events } = require("discord.js");
 const Client = require("../../Structures/Client");
 const { processMessage } = require("../../Data/reusableFunctions");
 module.exports = {
-  name: "guildMemberRemove",
+  name: Events.GuildMemberRemove,
   /**
    *
    * @param {Client} client
@@ -15,18 +15,18 @@ module.exports = {
     let db = client.db;
 
     db.query(
-      `SELECT * FROM \`join_leave\` WHERE \`guildId\` = ${member.guild.id}`,
+      `SELECT * FROM \`guilds\` WHERE \`guildId\` = ${member.guild.id}`,
       (err, result, fields) => {
         if (err || !result || !result[0]) return;
         let reslt = result[0];
         if (reslt["enabled"] == 1) {
           client.channels
-            .fetch(reslt["leaveChannelId"], {
+            .fetch(reslt["leave_channel"], {
               allowUnknownGuild: true,
               force: true,
             })
             .then((channel) => {
-              channel.send(processMessage(reslt["leaveMessage"]));
+              channel.send(processMessage(reslt["leave_message"]));
             });
         }
       }

@@ -1,7 +1,7 @@
-const { EmbedBuilder, Colors } = require("discord.js");
+const { EmbedBuilder, Colors, Events } = require("discord.js");
 require("dotenv").config();
 module.exports = {
-  name: "interactionCreate",
+  name: Events.InteractionCreate,
   /**
    *
    * @param {import("discord.js").Interaction} interaction

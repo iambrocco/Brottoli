@@ -1,8 +1,8 @@
-const { User, EmbedBuilder } = require("discord.js");
+const { User, EmbedBuilder, Events } = require("discord.js");
 const Client = require("../../Structures/Client");
 
 module.exports = {
-  name: "messageReactionAdd",
+  name: Events.MessageReactionAdd,
   /**
    * @param {Client} client
    * @param {import("discord.js").MessageReaction} reaction

@@ -3,6 +3,7 @@ const {
   EmbedBuilder,
   Colors,
   PermissionFlagsBits,
+  MessageFlags
 } = require("discord.js");
 const CommandBuilder = require("../../Structures/CommandBuilder.js");
 const CommandTypes = require("../../Structures/Enums/CommandTypes.js");
@@ -74,7 +75,7 @@ module.exports = {
    * @param {CommandInteraction} interaction
    */
   async execute(interaction) {
-    if(!interaction.client.isDatabaseConnected()) return interaction.reply({ephemeral: true, embeds: [new ErrorEmbed().setError({name: 'Database Error', value: 'The database is not connected.'})]});
+    if(!interaction.client.isDatabaseConnected()) return interaction.reply({flags: MessageFlags.Ephemeral, embeds: [new ErrorEmbed().setError({name: 'Database Error', value: 'The database is not connected.'})]});
 
     await interaction.deferReply();
     const subcommand = interaction.options.getSubcommand();

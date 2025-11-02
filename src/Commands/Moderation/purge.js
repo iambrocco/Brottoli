@@ -3,6 +3,7 @@ const {
   EmbedBuilder,
   Colors,
   PermissionFlagsBits,
+  MessageFlags
 } = require("discord.js");
 const CommandBuilder = require("../../Structures/CommandBuilder.js");
 const CommandTypes = require("../../Structures/Enums/CommandTypes.js");
@@ -39,7 +40,7 @@ module.exports = {
                     });
                   await interaction.followUp({
                     content: `Messages Older than 14 days can't be deleted by Bots because of Discord's API Limit.`,
-                    ephemeral: true,
+                    flags: MessageFlags.Ephemeral,
                   });
                 });
             }

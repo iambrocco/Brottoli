@@ -1,6 +1,6 @@
+const { MessageFlags } = require("discord.js");
 const MeetChatConnectionStates = require("./Enums/MeetChatClientConnectionStates.js");
 const ErrorEmbed = require("./ErrorEmbed.js");
-
 class MeetChatClient {
   constructor(channelOne, db, interaction) {
     this.db = db;
@@ -15,7 +15,7 @@ class MeetChatClient {
   handleError(err) {
     if (err) {
       this.interaction.reply({
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
         embeds: [
           new ErrorEmbed().setError({
             name: "An Error Occured",
@@ -39,7 +39,7 @@ class MeetChatClient {
         }
         if (result.length != 0) {
           return await this.interaction.reply({
-            ephemeral: true,
+            flags: MessageFlags.Ephemeral,
             content: `You are already connected to a meetchat session.`,
           });
         }
@@ -132,7 +132,7 @@ class MeetChatClient {
       async (err, result) => {
         if (!result || result.length == 0) {
           return this.interaction.reply({
-            ephemeral: true,
+            flags: MessageFlags.Ephemeral,
             content: `You are not connected to any meetchat party!`,
           });
         }

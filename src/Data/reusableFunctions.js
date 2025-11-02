@@ -3,6 +3,7 @@ const namedColors = require("color-name-list");
 const badWords = require("./badwords.json").badwords;
 const fs = require("fs");
 const path = require("path");
+const { MessageFlags } = require("discord.js");
 function processMessage(message) {
   let currentMsg = message;
   for (let key in joinLeaveStringValues.keys) {
@@ -74,9 +75,9 @@ function colorToHex(color, commandType, interaction) {
   // Unsupported format
   interaction
     ? interaction.followUp({
-        ephemeral: true,
-        content: `***If you've written a hex color code without the \`#\` it won't work.***`,
-      })
+      flags: MessageFlags.Ephemeral,
+      content: `***If you've written a hex color code without the \`#\` it won't work.***`,
+    })
     : "";
   return "#000000";
 }

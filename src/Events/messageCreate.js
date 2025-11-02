@@ -1,8 +1,8 @@
-const { Message } = require("discord.js");
+const { Message, Events } = require("discord.js");
 const ErrorEmbed = require("../Structures/ErrorEmbed.js");
 
 module.exports = {
-  name: "messageCreate",
+  name: Events.MessageCreate,
   /**
    *
    * @param {Message} message

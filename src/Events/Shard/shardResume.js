@@ -1,6 +1,7 @@
+const { Events } = require("discord.js");
 const Client = require("../../Structures/Client.js");
 module.exports = {
-  name: "shardResume",
+  name: Events.ShardResume,
   /**
    *
    * @param {Client} client

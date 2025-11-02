@@ -1,8 +1,8 @@
 // Import
-const CommandBuilder = require("../../Structures/CommandBuilder.js");
-const CommandTypes = require("../../Structures/Enums/CommandTypes.js");
+const CommandBuilder = require("../../../Structures/CommandBuilder.js");
+const CommandTypes = require("../../../Structures/Enums/CommandTypes.js");
 const { Colors, EmbedBuilder } = require("discord.js");
-const mcData = require("../../Data/minecraft.json");
+const mcData = require("../../../Data/minecraft.json");
 // Creating the command
 module.exports = {
   // Exporting the Data
@@ -10,15 +10,16 @@ module.exports = {
     .setCategory("Minecraft")
     .setType(CommandTypes.SLASH)
     .setName("mckill")
-    .setDescription("Kill Someone With a Minecraft Death Message"),
+    .setDescription("Kill Someone With a Minecraft Death Message")
+    .addMentionableOption(option => option.setName("killed").setDescription("The Person You Want to Kill")),
   /**
    *
    * @param {import("discord.js").Interaction} interaction
    * @param {Array} args
    */
   async execute(interaction) {
-    let mentionedUser = interaction.options.getMentionable("user")
-      ? interaction.options.getMentionable("user")
+    let mentionedUser = interaction.options.getMentionable("killed")
+      ? interaction.options.getMentionable("killed")
       : interaction.user;
     let deathMessages = mcData.Death_Messages;
     let killEmbed = new EmbedBuilder()

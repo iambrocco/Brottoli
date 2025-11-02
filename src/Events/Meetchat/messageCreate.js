@@ -1,16 +1,18 @@
-const { Message } = require("discord.js");
+const { Message, Events } = require("discord.js");
 const ErrorEmbed = require("../../Structures/ErrorEmbed.js");
 const Client = require("../../Structures/Client.js");
 const MeetChatClientConnectionStates = require("../../Structures/Enums/MeetChatClientConnectionStates.js");
 const { filterText } = require("../../Data/reusableFunctions.js");
 
 module.exports = {
-  name: "messageCreate",
+  name: Events.MessageCreate,
   /**
    * @param {Client} client
    * @param {Message} message
    */
   async execute(client, message) {
+    const db = client.db;
+    if (!client.isDatabaseConnected()) return;
     if (message.author.bot) return;
     let filtered = filterText(message.content).text;
     const msgTemplate = `**${message.author.username}** » ${
@@ -18,7 +20,6 @@ module.exports = {
         ? filtered.slice(0, 1950) + `...\n**This Message Doesn't Fit.**`
         : filtered
     }`;
-    const db = client.db;
 
     db.query(
       `SELECT * FROM \`meetchat\` WHERE (channelOneId = ? OR channelTwoId = ?) AND channelTwoId != 0 AND connectionState = ?`,

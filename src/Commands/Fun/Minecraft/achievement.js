@@ -18,7 +18,6 @@ module.exports = {
   data: new CommandBuilder()
     .setCategory("Minecraft")
     .setType(CommandTypes.SLASH)
-
     .setName("achievement")
     .setDescription("Generates A Minecraft Achievement Image")
     .addSubcommand((sub) =>

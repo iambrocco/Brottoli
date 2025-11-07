@@ -2,7 +2,7 @@ const {
   ActionRowBuilder,
   StringSelectMenuBuilder,
   StringSelectMenuOptionBuilder,
-  MessageFlags
+  MessageFlags, InteractionContextType, ApplicationIntegrationType
 } = require("discord.js");
 const CommandBuilder = require("../../Structures/CommandBuilder.js");
 const CommandTypes = require("../../Structures/Enums/CommandTypes.js");
@@ -12,6 +12,8 @@ module.exports = {
     .setName("config")
     .setDescription("Configuration Command")
     .setType(CommandTypes.SLASH)
+    .setContexts([InteractionContextType.Guild])
+    .setIntegrationTypes([ApplicationIntegrationType.GuildInstall])
     .addSubcommand((command) =>
       command
         .setName("join_leave")

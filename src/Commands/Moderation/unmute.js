@@ -3,7 +3,7 @@ const {
   GuildMember,
   EmbedBuilder,
   Colors,
-  PermissionFlagsBits,
+  PermissionFlagsBits, InteractionContextType, ApplicationIntegrationType
 } = require("discord.js");
 const CommandBuilder = require("../../Structures/CommandBuilder.js");
 const CommandTypes = require("../../Structures/Enums/CommandTypes.js");
@@ -15,6 +15,8 @@ module.exports = {
     .setCategory("Moderation")
     .setDefaultMemberPermissions(PermissionFlagsBits.ModerateMembers)
     .setType(CommandTypes.SLASH)
+    .setContexts([InteractionContextType.Guild])
+    .setIntegrationTypes([ApplicationIntegrationType.GuildInstall])
     .addMentionableOption((option) =>
       option
         .setName("user")

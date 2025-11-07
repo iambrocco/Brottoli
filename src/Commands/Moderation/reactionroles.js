@@ -3,7 +3,7 @@ const {
   EmbedBuilder,
   Colors,
   PermissionFlagsBits,
-  MessageFlags
+  MessageFlags, InteractionContextType, ApplicationIntegrationType
 } = require("discord.js");
 const CommandBuilder = require("../../Structures/CommandBuilder.js");
 const CommandTypes = require("../../Structures/Enums/CommandTypes.js");
@@ -69,84 +69,86 @@ module.exports = {
         .setDescription("list all reaction roles in this server")
     )
     .setType(CommandTypes.SLASH)
+    .setContexts([InteractionContextType.Guild])
+    .setIntegrationTypes([ApplicationIntegrationType.GuildInstall])
     .setCategory("Moderation"),
   /**
    *
    * @param {CommandInteraction} interaction
    */
   async execute(interaction) {
-    if(!interaction.client.isDatabaseConnected()) return interaction.reply({flags: MessageFlags.Ephemeral, embeds: [new ErrorEmbed().setError({name: 'Database Error', value: 'The database is not connected.'})]});
+    if (!interaction.client.isDatabaseConnected()) return interaction.reply({ flags: MessageFlags.Ephemeral, embeds: [new ErrorEmbed().setError({ name: 'Database Error', value: 'The database is not connected.' })] });
 
     await interaction.deferReply();
     const subcommand = interaction.options.getSubcommand();
     subcommand == "add"
       ? (() => {
-          const channel = interaction.options.getChannel("channel");
-          const role = interaction.options.getMentionable("role");
-          const messageid = interaction.options.getString("message");
-          const emoji = interaction.options.getString("emoji");
-          let channelID = channel.id;
-          let roleID = role.id;
-          let emojiName = emoji.includes(":") ? emoji.split(":")[1] : emoji;
+        const channel = interaction.options.getChannel("channel");
+        const role = interaction.options.getMentionable("role");
+        const messageid = interaction.options.getString("message");
+        const emoji = interaction.options.getString("emoji");
+        let channelID = channel.id;
+        let roleID = role.id;
+        let emojiName = emoji.includes(":") ? emoji.split(":")[1] : emoji;
 
-          interaction.guild.channels.fetch(channelID).then((channel) => {
-            channel.messages
-              .fetch(messageid)
-              .catch(() => {
-                return interaction.editReply(`Error! Failed To Find Message!`);
-              })
-              .then((message) => {
-                if (!message) return;
-                message.react(emoji);
-                interaction.client.db.query(
-                  `INSERT INTO \`reaction_roles\` (channelId, messageId, emoji, roleId, guildId) VALUES (?, ?, ?, ?, ?)`,
-                  [
-                    channelID,
-                    messageid,
-                    emojiName,
-                    roleID,
-                    interaction.guildId,
-                  ],
-                  async (err) => {
-                    if (err) {
-                      return await interaction.editReply(`An Error Occured.`);
-                    }
-
-                    await interaction.editReply({
-                      embeds: [
-                        new EmbedBuilder()
-                          .setTitle("Successfully Added Reaction Role")
-                          .setColor(Colors.Green)
-                          .addFields(
-                            {
-                              name: `Reaction Emoji`,
-                              value: `${emoji}`,
-                              inline: true,
-                            },
-                            {
-                              name: `Reaction Message ID`,
-                              value: `${messageid}`,
-                              inline: true,
-                            },
-                            {
-                              name: `Reaction Channel`,
-                              value: `${channel}`,
-                              inline: true,
-                            },
-                            {
-                              name: `Reaction Role`,
-                              value: `${role}`,
-                            }
-                          ),
-                      ],
-                    });
+        interaction.guild.channels.fetch(channelID).then((channel) => {
+          channel.messages
+            .fetch(messageid)
+            .catch(() => {
+              return interaction.editReply(`Error! Failed To Find Message!`);
+            })
+            .then((message) => {
+              if (!message) return;
+              message.react(emoji);
+              interaction.client.db.query(
+                `INSERT INTO \`reaction_roles\` (channelId, messageId, emoji, roleId, guildId) VALUES (?, ?, ?, ?, ?)`,
+                [
+                  channelID,
+                  messageid,
+                  emojiName,
+                  roleID,
+                  interaction.guildId,
+                ],
+                async (err) => {
+                  if (err) {
+                    return await interaction.editReply(`An Error Occured.`);
                   }
-                );
-              });
-          });
-        })()
+
+                  await interaction.editReply({
+                    embeds: [
+                      new EmbedBuilder()
+                        .setTitle("Successfully Added Reaction Role")
+                        .setColor(Colors.Green)
+                        .addFields(
+                          {
+                            name: `Reaction Emoji`,
+                            value: `${emoji}`,
+                            inline: true,
+                          },
+                          {
+                            name: `Reaction Message ID`,
+                            value: `${messageid}`,
+                            inline: true,
+                          },
+                          {
+                            name: `Reaction Channel`,
+                            value: `${channel}`,
+                            inline: true,
+                          },
+                          {
+                            name: `Reaction Role`,
+                            value: `${role}`,
+                          }
+                        ),
+                    ],
+                  });
+                }
+              );
+            });
+        });
+      })()
       : subcommand == "remove"
-      ? (() => {
+        ? (() => {
           const messageid = interaction.options.getString("message");
           const emoji = interaction.options.getString("emoji");
           let emojiName = emoji.includes(":") ? emoji.split(":")[1] : emoji;
@@ -169,66 +171,66 @@ module.exports = {
             }
           );
         })()
-      : subcommand == "list"
-      ? (() => {
-          interaction.client.db.query(
-            `SELECT * FROM reaction_roles WHERE guildId = ?`,
-            [interaction.guildId],
-            (err, result) => {
-              if (err) {
-                return interaction.editReply("An Error Occurred.");
-              }
-              if (result.length === 0 || !result[0]) {
+        : subcommand == "list"
+          ? (() => {
+            interaction.client.db.query(
+              `SELECT * FROM reaction_roles WHERE guildId = ?`,
+              [interaction.guildId],
+              (err, result) => {
+                if (err) {
+                  return interaction.editReply("An Error Occurred.");
+                }
+                if (result.length === 0 || !result[0]) {
+                  return interaction.editReply({
+                    embeds: [
+                      new EmbedBuilder()
+                        .setTitle(
+                          `${interaction.guild.name}'s Reaction Roles List`
+                        )
+                        .setDescription(
+                          `No Reaction Roles were found for this server.`
+                        ),
+                    ],
+                  });
+                }
+
+                const reactionRolesMap = new Map();
+
+                result.forEach((reactionRole) => {
+                  const key = `${reactionRole.messageId}-${reactionRole.channelId}`;
+                  if (!reactionRolesMap.has(key)) {
+                    reactionRolesMap.set(key, []);
+                  }
+                  reactionRolesMap.get(key).push(reactionRole);
+                });
+
+                const rrs = [];
+                reactionRolesMap.forEach((reactionRoles, key) => {
+                  const reactionDetails = reactionRoles
+                    .map((rr) => `${rr.emoji} - <@&${rr.roleId}>`)
+                    .join(", ");
+
+                  const [messageId, channelId] = key.split("-");
+                  const guildId = interaction.guildId;
+
+                  rrs.push({
+                    name: `https://discord.com/channels/${guildId}/${channelId}/${messageId}`,
+                    value: reactionDetails,
+                  });
+                });
+
                 return interaction.editReply({
                   embeds: [
                     new EmbedBuilder()
+                      .addFields(...rrs)
                       .setTitle(
                         `${interaction.guild.name}'s Reaction Roles List`
-                      )
-                      .setDescription(
-                        `No Reaction Roles were found for this server.`
                       ),
                   ],
                 });
               }
-
-              const reactionRolesMap = new Map();
-
-              result.forEach((reactionRole) => {
-                const key = `${reactionRole.messageId}-${reactionRole.channelId}`;
-                if (!reactionRolesMap.has(key)) {
-                  reactionRolesMap.set(key, []);
-                }
-                reactionRolesMap.get(key).push(reactionRole);
-              });
-
-              const rrs = [];
-              reactionRolesMap.forEach((reactionRoles, key) => {
-                const reactionDetails = reactionRoles
-                  .map((rr) => `${rr.emoji} - <@&${rr.roleId}>`)
-                  .join(", ");
-
-                const [messageId, channelId] = key.split("-");
-                const guildId = interaction.guildId;
-
-                rrs.push({
-                  name: `https://discord.com/channels/${guildId}/${channelId}/${messageId}`,
-                  value: reactionDetails,
-                });
-              });
-
-              return interaction.editReply({
-                embeds: [
-                  new EmbedBuilder()
-                    .addFields(...rrs)
-                    .setTitle(
-                      `${interaction.guild.name}'s Reaction Roles List`
-                    ),
-                ],
-              });
-            }
-          );
-        })()
-      : "";
+            );
+          })()
+          : "";
   },
 };

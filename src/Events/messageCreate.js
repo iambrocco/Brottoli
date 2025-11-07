@@ -9,15 +9,15 @@ module.exports = {
    */
   async execute(client, message) {
     if (
-      !message.content.startsWith(message.client.textCommandsPrefix) ||
+      !message.content.startsWith(client.textCommandsPrefix) ||
       message.author.bot
     )
       return;
     let args = message.content
       .toLowerCase()
-      .slice(message.client.textCommandsPrefix.length)
+      .slice(client.textCommandsPrefix.length)
       .split(/ +/);
-    let command = message.client.Commands.get(args[0]);
+    let command = client.Commands.get(args[0]);
     if (command && command.data.commandType.toLowerCase() == "slash") {
       let errorEmbed = new ErrorEmbed().setError({
         name: "Wrong Command Type!",

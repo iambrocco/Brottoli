@@ -3,7 +3,9 @@ const {
   GuildMember,
   EmbedBuilder,
   Colors,
-  PermissionFlagsBits,
+  PermissionFlagsBits, 
+  InteractionContextType,
+  ApplicationIntegrationType
 } = require("discord.js");
 const CommandBuilder = require("../../Structures/CommandBuilder.js");
 const CommandTypes = require("../../Structures/Enums/CommandTypes.js");
@@ -13,6 +15,8 @@ module.exports = {
   data: new CommandBuilder()
     .setName("ban")
     .setDescription("Ban a Member")
+    .setContexts([InteractionContextType.Guild])
+    .setIntegrationTypes([ApplicationIntegrationType.GuildInstall])
     .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers)
     .addMentionableOption((option) =>
       option
@@ -45,35 +49,35 @@ module.exports = {
       : interaction.options.getString("reason");
     memberOption.bannable && interaction.memberPermissions.has("BanMembers")
       ? (() => {
-          let duration = !interaction.options.getString("duration")
-            ? 0
-            : interaction.options.getString("duration");
-          let dur = isNaN(duration)
-            ? parseInt(ms(duration))
-            : parseInt(duration) * 1000;
+        let duration = !interaction.options.getString("duration")
+          ? 0
+          : interaction.options.getString("duration");
+        let dur = isNaN(duration)
+          ? parseInt(ms(duration))
+          : parseInt(duration) * 1000;
 
-          memberOption.ban({ deleteMessageSeconds: dur, reason: reason });
-          interaction.reply({
-            embeds: [
-              feedBackEmbed.setTitle("User Banned Successfully").addFields(
-                {
-                  name: "User Successfully Banned",
-                  value: `${memberOption} was successfully banned`,
-                },
-                { name: "Reason", value: `${reason}` }
-              ),
-            ],
-          });
-        })()
+        memberOption.ban({ deleteMessageSeconds: dur, reason: reason });
+        interaction.reply({
+          embeds: [
+            feedBackEmbed.setTitle("User Banned Successfully").addFields(
+              {
+                name: "User Successfully Banned",
+                value: `${memberOption} was successfully banned`,
+              },
+              { name: "Reason", value: `${reason}` }
+            ),
+          ],
+        });
+      })()
       : (() => {
-          feedBackEmbed
-            .setColor(Colors.Red)
-            .setTitle("Failed To Ban Member")
-            .addFields({
-              name: "Error",
-              value: "Insufficient Permissions!",
-            });
-          interaction.reply({ embeds: [feedBackEmbed] });
-        })();
+        feedBackEmbed
+          .setColor(Colors.Red)
+          .setTitle("Failed To Ban Member")
+          .addFields({
+            name: "Error",
+            value: "Insufficient Permissions!",
+          });
+        interaction.reply({ embeds: [feedBackEmbed] });
+      })();
   },
 };

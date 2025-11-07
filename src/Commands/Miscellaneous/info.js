@@ -6,7 +6,7 @@ const {
   codeBlock,
   inlineCode,
   Role,
-  Guild,
+  Guild, InteractionContextType, ApplicationIntegrationType
 } = require("discord.js");
 const CommandBuilder = require("../../Structures/CommandBuilder.js");
 const CommandTypes = require("../../Structures/Enums/CommandTypes.js");
@@ -15,8 +15,11 @@ module.exports = {
   data: new CommandBuilder()
     .setName("info")
     .setDescription("Get Information About a Specific Thing")
-    .setCategory("Moderation")
+    .setCategory("Miscellaneous")
     .setType(CommandTypes.SLASH)
+    .setContexts([InteractionContextType.Guild])
+    .setIntegrationTypes([ApplicationIntegrationType.GuildInstall])
+
     .addSubcommand((subcommand) =>
       subcommand
         .setName("user")
@@ -75,10 +78,9 @@ module.exports = {
         infoEmbed
           .setTitle(`${user.displayName}'s Info`)
           .setThumbnail(
-            `${
-              user.avatarURL()
-                ? user.avatarURL()
-                : "https://i.imgur.com/p8oEVeT.png"
+            `${user.avatarURL()
+              ? user.avatarURL()
+              : "https://i.imgur.com/p8oEVeT.png"
             }`
           )
           .addFields(
@@ -108,8 +110,8 @@ module.exports = {
               name: `Server Nickname`,
               value: `${inlineCode(
                 interaction.guild.members.resolve(user).nickname ??
-                  user.globalName ??
-                  user.username
+                user.globalName ??
+                user.username
               )}`,
               inline: true,
             },
@@ -156,11 +158,10 @@ module.exports = {
             },
             {
               name: `Role Icon URL`,
-              value: `${
-                role.iconURL({ extension: "png" })
+              value: `${role.iconURL({ extension: "png" })
                   ? `[PNG](${role.iconURL({ extension: "png" })})`
                   : inlineCode("Role Has No Icon")
-              }`,
+                }`,
               inline: true,
             }
             // {
@@ -191,9 +192,8 @@ module.exports = {
             },
             {
               name: `Channel Type`,
-              value: `${inlineCode(channelTypes[channel.type])} (${
-                channel.type
-              })`,
+              value: `${inlineCode(channelTypes[channel.type])} (${channel.type
+                })`,
               inline: true,
             },
             {
@@ -236,20 +236,18 @@ module.exports = {
             },
             {
               name: `Server AFK Channel`,
-              value: `${
-                server.afkChannel
+              value: `${server.afkChannel
                   ? server.afkChannel
                   : inlineCode("No AFK Channel")
-              }`,
+                }`,
               inline: true,
             },
             {
               name: `Server Rules Channel`,
-              value: `${
-                server.rulesChannel
+              value: `${server.rulesChannel
                   ? server.rulesChannel
                   : inlineCode("No Rules Channel")
-              }`,
+                }`,
               inline: true,
             },
             {
@@ -258,10 +256,9 @@ module.exports = {
             }
           )
           .setThumbnail(
-            `${
-              server.iconURL()
-                ? server.iconURL()
-                : "https://i.imgur.com/p8oEVeT.png"
+            `${server.iconURL()
+              ? server.iconURL()
+              : "https://i.imgur.com/p8oEVeT.png"
             }`
           )
           .setColor(Colors.Greyple);

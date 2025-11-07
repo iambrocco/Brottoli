@@ -4,7 +4,7 @@ const {
   EmbedBuilder,
   Colors,
   PermissionFlagsBits,
-  MessageFlags
+  MessageFlags, InteractionContextType, ApplicationIntegrationType
 } = require("discord.js");
 const CommandBuilder = require("../../Structures/CommandBuilder.js");
 const CommandTypes = require("../../Structures/Enums/CommandTypes.js");
@@ -16,6 +16,8 @@ module.exports = {
     .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers)
     .setCategory("Moderation")
     .setType(CommandTypes.SLASH)
+    .setContexts([InteractionContextType.Guild])
+    .setIntegrationTypes([ApplicationIntegrationType.GuildInstall])
     .addUserOption((option) =>
       option
         .setName("user")

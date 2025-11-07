@@ -3,7 +3,7 @@ const {
   EmbedBuilder,
   Colors,
   PermissionFlagsBits,
-  MessageFlags
+  MessageFlags, InteractionContextType, ApplicationIntegrationType
 } = require("discord.js");
 const CommandBuilder = require("../../Structures/CommandBuilder.js");
 const CommandTypes = require("../../Structures/Enums/CommandTypes.js");
@@ -14,7 +14,8 @@ module.exports = {
     .setCategory("Moderation")
     .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages)
     .setType(CommandTypes.SLASH)
-
+    .setContexts([InteractionContextType.Guild])
+    .setIntegrationTypes([ApplicationIntegrationType.GuildInstall])
     .addNumberOption((option) =>
       option
         .setName("amount")

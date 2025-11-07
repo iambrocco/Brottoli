@@ -9,7 +9,7 @@ module.exports = {
  * @param {Object} replayedEvents
    */
   async execute(client, shardId, replayedEvents) {
-    client.log(shardId, replayedEvents)
+    client.log((shardId, replayedEvents))
   },
 };
         

@@ -1,4 +1,4 @@
-const { CommandInteraction, EmbedBuilder, MessageFlags } = require("discord.js");
+const { CommandInteraction, EmbedBuilder, MessageFlags, InteractionContextType, ApplicationIntegrationType } = require("discord.js");
 const CommandBuilder = require("../../Structures/CommandBuilder.js");
 const CommandTypes = require("../../Structures/Enums/CommandTypes.js");
 const MeetChatClient = require("../../Structures/MeetChatClient.js");
@@ -8,6 +8,8 @@ module.exports = {
     .setName("meetchat")
     .setDescription("Meet new people by chatting")
     .setCategory("Fun")
+    .setContexts([InteractionContextType.Guild])
+    .setIntegrationTypes([ApplicationIntegrationType.GuildInstall])
     .addSubcommandGroup((subcommandGroup) =>
       subcommandGroup
         .setName("call")

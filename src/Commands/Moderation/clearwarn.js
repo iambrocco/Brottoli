@@ -15,9 +15,9 @@ module.exports = {
     .setDescription("Clear or remove a member's warnings")
     .setCategory("Moderation")
     .setDefaultMemberPermissions(PermissionFlagsBits.ModerateMembers)
-    .setType(CommandTypes.SLASH)
+    .setType(CommandTypes.SLASH) 
     .setContexts([InteractionContextType.Guild])
-    .setIntegrationTypes([ApplicationIntegrationType.GuildInstall])
+    .setIntegrationTypes(ApplicationIntegrationType.GuildInstall)
     .addMentionableOption(option =>
       option
         .setName("user")

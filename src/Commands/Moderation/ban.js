@@ -14,9 +14,9 @@ const ms = require("ms");
 module.exports = {
   data: new CommandBuilder()
     .setName("ban")
-    .setDescription("Ban a Member")
+    .setDescription("Ban a Member") 
     .setContexts([InteractionContextType.Guild])
-    .setIntegrationTypes([ApplicationIntegrationType.GuildInstall])
+    .setIntegrationTypes(ApplicationIntegrationType.GuildInstall)
     .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers)
     .addMentionableOption((option) =>
       option

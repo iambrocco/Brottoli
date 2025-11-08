@@ -16,9 +16,9 @@ module.exports = {
     .setName("info")
     .setDescription("Get Information About a Specific Thing")
     .setCategory("Miscellaneous")
-    .setType(CommandTypes.SLASH)
+    .setType(CommandTypes.SLASH) 
     .setContexts([InteractionContextType.Guild])
-    .setIntegrationTypes([ApplicationIntegrationType.GuildInstall])
+    .setIntegrationTypes(ApplicationIntegrationType.GuildInstall)
 
     .addSubcommand((subcommand) =>
       subcommand

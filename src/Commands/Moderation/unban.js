@@ -15,9 +15,9 @@ module.exports = {
     .setDescription("Unban a Member")
     .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers)
     .setCategory("Moderation")
-    .setType(CommandTypes.SLASH)
+    .setType(CommandTypes.SLASH) 
     .setContexts([InteractionContextType.Guild])
-    .setIntegrationTypes([ApplicationIntegrationType.GuildInstall])
+    .setIntegrationTypes(ApplicationIntegrationType.GuildInstall)
     .addUserOption((option) =>
       option
         .setName("user")

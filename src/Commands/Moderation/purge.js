@@ -13,9 +13,9 @@ module.exports = {
     .setDescription("Delete a Number of Message")
     .setCategory("Moderation")
     .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages)
-    .setType(CommandTypes.SLASH)
+    .setType(CommandTypes.SLASH) 
     .setContexts([InteractionContextType.Guild])
-    .setIntegrationTypes([ApplicationIntegrationType.GuildInstall])
+    .setIntegrationTypes(ApplicationIntegrationType.GuildInstall)
     .addNumberOption((option) =>
       option
         .setName("amount")

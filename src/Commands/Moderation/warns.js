@@ -23,7 +23,7 @@ module.exports = {
                 .setRequired(false)
         )
         .setContexts([InteractionContextType.Guild])
-        .setIntegrationTypes([ApplicationIntegrationType.GuildInstall]),
+        .setIntegrationTypes(ApplicationIntegrationType.GuildInstall),
     /**
      * @param {import('discord.js').CommandInteraction} interaction
      */

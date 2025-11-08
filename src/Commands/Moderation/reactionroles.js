@@ -68,9 +68,9 @@ module.exports = {
         .setName("list")
         .setDescription("list all reaction roles in this server")
     )
-    .setType(CommandTypes.SLASH)
+    .setType(CommandTypes.SLASH) 
     .setContexts([InteractionContextType.Guild])
-    .setIntegrationTypes([ApplicationIntegrationType.GuildInstall])
+    .setIntegrationTypes(ApplicationIntegrationType.GuildInstall)
     .setCategory("Moderation"),
   /**
    *

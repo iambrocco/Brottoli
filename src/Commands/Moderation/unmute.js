@@ -14,9 +14,9 @@ module.exports = {
     .setDescription("Unmute a Member")
     .setCategory("Moderation")
     .setDefaultMemberPermissions(PermissionFlagsBits.ModerateMembers)
-    .setType(CommandTypes.SLASH)
+    .setType(CommandTypes.SLASH) 
     .setContexts([InteractionContextType.Guild])
-    .setIntegrationTypes([ApplicationIntegrationType.GuildInstall])
+    .setIntegrationTypes(ApplicationIntegrationType.GuildInstall)
     .addMentionableOption((option) =>
       option
         .setName("user")

@@ -7,9 +7,9 @@ module.exports = {
   data: new CommandBuilder()
     .setName("meetchat")
     .setDescription("Meet new people by chatting")
-    .setCategory("Fun")
+    .setCategory("Fun") 
     .setContexts([InteractionContextType.Guild])
-    .setIntegrationTypes([ApplicationIntegrationType.GuildInstall])
+    .setIntegrationTypes(ApplicationIntegrationType.GuildInstall)
     .addSubcommandGroup((subcommandGroup) =>
       subcommandGroup
         .setName("call")

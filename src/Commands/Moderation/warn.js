@@ -15,9 +15,8 @@ module.exports = {
     .setDescription("Warn a Member")
     .setCategory("Moderation")
     .setDefaultMemberPermissions(PermissionFlagsBits.ModerateMembers)
-    .setType(CommandTypes.SLASH)
-    .setContexts([InteractionContextType.Guild])
-    .setIntegrationTypes([ApplicationIntegrationType.GuildInstall])
+    .setType(CommandTypes.SLASH) setContexts([InteractionContextType.Guild])
+    .setIntegrationTypes(ApplicationIntegrationType.GuildInstall)
     .addMentionableOption(option =>
       option
         .setName("user")

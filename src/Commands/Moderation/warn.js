@@ -53,7 +53,7 @@ module.exports = {
 
     const feedBackEmbed = new EmbedBuilder().setColor(Colors.Green);
 
-    client.db.query(
+    client.query(
       "SELECT * FROM warns WHERE userId = ? AND guildId = ?",
       [memberOption.id, interaction.guildId],
       (err, results) => {
@@ -65,7 +65,7 @@ module.exports = {
         const result = results[0];
 
         if (!result) {
-          client.db.query(
+          client.query(
             "INSERT INTO warns (userId, guildId, count, reason) VALUES (?, ?, ?, ?)",
             [memberOption.id, interaction.guildId, 1, reason],
             err => {
@@ -83,7 +83,7 @@ module.exports = {
               ? `${result.reason}, ${reason}`
               : reason;
 
-          client.db.query(
+          client.query(
             "UPDATE warns SET count = ?, reason = ? WHERE userId = ? AND guildId = ?",
             [newCount, newReason, memberOption.id, interaction.guildId],
             err => {

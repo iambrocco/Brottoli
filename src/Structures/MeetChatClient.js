@@ -2,8 +2,8 @@ const { MessageFlags } = require("discord.js");
 const MeetChatConnectionStates = require("./Enums/MeetChatClientConnectionStates.js");
 const ErrorEmbed = require("./ErrorEmbed.js");
 class MeetChatClient {
-  constructor(channelOne, db, interaction) {
-    this.db = db;
+  constructor(channelOne, client, interaction) {
+    this.client = client;
     this.channelOne = channelOne;
     this.channelTwo = 0;
     this.connectionState = MeetChatConnectionStates.WAITING;
@@ -27,7 +27,7 @@ class MeetChatClient {
     }
   }
   async init() {
-    this.db.query(
+    this.client.query(
       `SELECT * FROM meetchat WHERE channelOneId = ? OR channelTwoId = ?`,
       [this.channelOne, this.channelOne],
       async (err, result) => {
@@ -48,7 +48,7 @@ class MeetChatClient {
     return this;
   }
   async insertChannelOneData() {
-    this.db.query(
+    this.client.query(
       `INSERT INTO meetchat (connectionState, channelOneId, channelTwoId, channelOneGuildId, channelTwoGuildId, connectedOn) VALUES (?, ?, ?, ?, ?, ?)`,
       [
         this.connectionState,
@@ -66,7 +66,7 @@ class MeetChatClient {
     return this;
   }
   handleConnectionAndSendConnectMessage() {
-    this.db.query(
+    this.client.query(
       `SELECT * FROM meetchat WHERE (channelOneId = ? OR channelTwoId = ?) AND channelOneGuildId != channelTwoGuildId`,
       [this.channelOne, this.channelOne],
       async (err, result) => {
@@ -84,7 +84,7 @@ class MeetChatClient {
     );
   }
   findSecondChannel() {
-    this.db.query(
+    this.client.query(
       `SELECT * FROM meetchat WHERE connectionState = ? AND channelOneGuildId != ? LIMIT 1`,
       [MeetChatConnectionStates.WAITING, this.guildOne],
       (err, result) => {
@@ -94,7 +94,7 @@ class MeetChatClient {
           this.connectedOn = Date.now();
           this.channelTwo = result[0].channelOneId;
           this.guildTwo = result[0].channelOneGuildId;
-          this.db.query(
+          this.client.query(
             `UPDATE meetchat SET channelTwoId = ?, channelTwoGuildId = ?, connectionState = ?, connectedOn = ? WHERE channelOneId = ? AND channelOneGuildId = ? AND channelTwoId = 0`,
             [
               this.channelTwo, // Updated to set channelTwo correctly,
@@ -107,7 +107,7 @@ class MeetChatClient {
             (err, reslt) => {
               this.handleError(err);
               if (reslt) {
-                this.db.query(
+                this.client.query(
                   `DELETE FROM meetchat WHERE channelOneId = ? AND channelTwoId = 0`,
                   [this.channelTwo],
                   this.handleError
@@ -126,7 +126,7 @@ class MeetChatClient {
 
   disconnect(channel) {
     this.connectionState = MeetChatConnectionStates.DISCONNECTED;
-    this.db.query(
+    this.client.query(
       `SELECT * FROM \`meetchat\` WHERE \`channelOneId\` = ? OR \`channelTwoId\` = ?`,
       [channel, channel],
       async (err, result) => {
@@ -147,7 +147,7 @@ class MeetChatClient {
               ).send(disconnectedMSG)
             : "";
 
-          this.db.query(
+          this.client.query(
             `DELETE FROM \`meetchat\` WHERE \`channelOneId\`= ? OR \`channelTwoId\`= ?`,
             [channel, channel],
             async (err, result) => {

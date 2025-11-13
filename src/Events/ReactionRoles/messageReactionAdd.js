@@ -11,7 +11,7 @@ module.exports = {
   async execute(client, reaction, user) {
     reaction.message.fetch(true);
     try {
-      client.db.query(
+      client.query(
         `SELECT * FROM reaction_roles WHERE channelId = ${reaction.message.channelId} AND emoji = '${reaction.emoji.name}'`,
         async (err, results) => {
           if (err) {

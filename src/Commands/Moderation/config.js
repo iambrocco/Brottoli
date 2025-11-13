@@ -29,7 +29,7 @@ module.exports = {
   async execute(interaction) {
     if (!interaction.client.isDatabaseConnected()) return interaction.reply({ flags: MessageFlags.Ephemeral, embeds: [new ErrorEmbed().setError({ name: 'Database Error', value: 'The database is not connected.' })] });
 
-    interaction.client.db.query(`UPDATE guilds SET customConfig = 1 WHERE guildId = ?`, [interaction.guildId]);
+    interaction.client.query(`UPDATE guilds SET customConfig = 1 WHERE guildId = ?`, [interaction.guildId]);
     if (interaction.options.getSubcommand() == "join_leave") {
       await interaction.reply({
         flags: MessageFlags.Ephemeral,

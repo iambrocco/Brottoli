@@ -100,7 +100,7 @@ module.exports = {
             .then((message) => {
               if (!message) return;
               message.react(emoji);
-              interaction.client.db.query(
+              interaction.client.query(
                 `INSERT INTO \`reaction_roles\` (channelId, messageId, emoji, roleId, guildId) VALUES (?, ?, ?, ?, ?)`,
                 [
                   channelID,
@@ -153,7 +153,7 @@ module.exports = {
           const emoji = interaction.options.getString("emoji");
           let emojiName = emoji.includes(":") ? emoji.split(":")[1] : emoji;
 
-          interaction.client.db.query(
+          interaction.client.query(
             "DELETE FROM `reaction_roles` WHERE messageId = ? AND emoji = ?",
             [messageid, emojiName],
             async (err) => {
@@ -173,7 +173,7 @@ module.exports = {
         })()
         : subcommand == "list"
           ? (() => {
-            interaction.client.db.query(
+            interaction.client.query(
               `SELECT * FROM reaction_roles WHERE guildId = ?`,
               [interaction.guildId],
               (err, result) => {

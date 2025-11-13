@@ -41,7 +41,7 @@ module.exports = {
 
     let meetChatClient = new MeetChatClient(
       interaction.channelId,
-      interaction.client.db,
+      interaction.client,
       interaction
     );
     if (interaction.options.getSubcommandGroup() == "call") {
@@ -52,7 +52,7 @@ module.exports = {
         meetChatClient.disconnect(interaction.channelId);
       }
       if (interaction.options.getSubcommand() == "addfriend") {
-        interaction.client.db.query(
+        interaction.client.query(
           `SELECT * FROM meetchat WHERE channelOneId = ? OR channelTwoId = ?`,
           [interaction.channelId, interaction.channelId],
           async (err, result) => {

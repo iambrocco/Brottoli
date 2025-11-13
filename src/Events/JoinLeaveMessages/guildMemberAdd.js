@@ -13,9 +13,8 @@ module.exports = {
     /**
      * @type {import("mysql2").Connection} db
      */
-    let db = client.db;
 
-    db.query(
+    client.query(
       `SELECT * FROM \`guilds\` WHERE \`guildId\` = ${member.guild.id}`,
       (err, result, fields) => {
         if (err || !result || !result[0]) return;

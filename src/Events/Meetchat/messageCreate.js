@@ -11,7 +11,6 @@ module.exports = {
    * @param {Message} message
    */
   async execute(client, message) {
-    const db = client.db;
     if (!client.isDatabaseConnected()) return;
     if (message.author.bot) return;
     let filtered = filterText(message.content).text;
@@ -21,7 +20,7 @@ module.exports = {
         : filtered
     }`;
 
-    db.query(
+    client.query(
       `SELECT * FROM \`meetchat\` WHERE (channelOneId = ? OR channelTwoId = ?) AND channelTwoId != 0 AND connectionState = ?`,
       [
         message.channelId,
@@ -29,16 +28,12 @@ module.exports = {
         MeetChatClientConnectionStates.CONNECTED,
       ],
       async (err, result, fields) => {
+
         if (err) {
-          return message.channel.send({
-            embeds: [
-              new ErrorEmbed().setError({
-                name: "An Error Occurred",
-                value: `${err}`,
-              }),
-            ],
-          });
+          message.react("❌")
+          return client.log(err, "error")
         }
+
         if (result.length == 0 || !result[0]) {
           return;
         }

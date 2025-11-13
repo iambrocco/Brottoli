@@ -24,7 +24,6 @@ module.exports = {
    * @param {import("discord.js").Interaction} interaction
    */
   async execute(client, interaction) {
-    const db = client.db;
 
     if (
       interaction.isStringSelectMenu() &&
@@ -156,7 +155,7 @@ module.exports = {
         flags: MessageFlags.Ephemeral,
       });
 
-      db.query(
+      client.query(
         `SELECT * FROM guilds WHERE guildId = ?`,
         [interaction.guildId],
         (err, reslt) => {
@@ -165,7 +164,7 @@ module.exports = {
             return;
           }
           if (reslt.length > 0) {
-            db.query(
+            client.query(
               `UPDATE \`guilds\` SET \`join_channel\`=?,\`leave_channel\`=?,\`join_message\`=?,\`leave_message\`=? WHERE \`guildId\`=?`,
               [
                 guildData.joinChannelId,
@@ -182,7 +181,7 @@ module.exports = {
             );
           }
           if (!reslt || reslt.length === 0) {
-            db.query(
+            client.query(
               `INSERT INTO \`guilds\`(\`guildId\`, \`timezone\`, \`customConfig\`, \`premium\`, \`join_message\`, \`join_channel\`, \`leave_message\`, \`leave_channel\`, \`modlogs_channel\`, \`sugesstions_channel\`) VALUES (?,?,?,?,?,?,?,?,?,?)`,
               [
                 interaction.guildId,

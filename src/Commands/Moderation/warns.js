@@ -57,7 +57,7 @@ module.exports = {
     async viewUserWarns(interaction, user) {
         const client = interaction.client;
 
-        client.db.query(
+        client.query(
             "SELECT * FROM warns WHERE userId = ? AND guildId = ?",
             [user.id, interaction.guildId],
             async (err, results) => {
@@ -100,7 +100,7 @@ module.exports = {
     async viewAllWarns(interaction) {
         const client = interaction.client;
 
-        client.db.query(
+        client.query(
             "SELECT * FROM warns WHERE guildId = ?",
             [interaction.guildId],
             async (err, results) => {

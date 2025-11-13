@@ -28,7 +28,7 @@ module.exports = {
       option
         .setName("amount")
         .setDescription(`Amount to remove (integer or "all")`)
-        .setRequired(true)
+        .setRequired(false)
     ),
 
   /**
@@ -49,7 +49,7 @@ module.exports = {
     }
 
     const memberOption = interaction.options.getMentionable("user");
-    const amountInput = interaction.options.getString("amount");
+    const amountInput = interaction.options.getString("amount") ?? "all";
     const amount = isNaN(parseInt(amountInput)) ? amountInput : parseInt(amountInput);
 
     if (isNaN(amount) && amount !== "all") {
@@ -61,7 +61,7 @@ module.exports = {
 
     const feedBackEmbed = new EmbedBuilder().setColor(Colors.Green);
 
-    client.db.query(
+    client.query(
       "SELECT * FROM warns WHERE userId = ? AND guildId = ?",
       [memberOption.id, interaction.guildId],
       (err, results) => {
@@ -84,7 +84,7 @@ module.exports = {
 
         if (amount === "all") {
           // Delete all warnings
-          client.db.query(
+          client.query(
             "DELETE FROM warns WHERE userId = ? AND guildId = ?",
             [memberOption.id, interaction.guildId],
             err => {
@@ -105,7 +105,7 @@ module.exports = {
           const newReason = splitReasons.join(",");
 
           if (newCount === 0) {
-            client.db.query(
+            client.query(
               "DELETE FROM warns WHERE userId = ? AND guildId = ?",
               [memberOption.id, interaction.guildId],
               err => {
@@ -117,7 +117,7 @@ module.exports = {
               }
             );
           } else {
-            client.db.query(
+            client.query(
               "UPDATE warns SET count = ?, reason = ? WHERE userId = ? AND guildId = ?",
               [newCount, newReason, memberOption.id, interaction.guildId],
               err => {

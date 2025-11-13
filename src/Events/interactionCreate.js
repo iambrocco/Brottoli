@@ -10,9 +10,8 @@ module.exports = {
     /**
      * @type {import("mysql2").Connection}
      */
-    const db = client.db;
-    if (db.authorized && interaction.guildId) {
-      db.query(
+    if (client.isDatabaseConnected() && interaction.guildId) {
+      client.query(
         `SELECT * FROM \`guilds\` WHERE guildId = ?`,
         [interaction.guildId],
         (err, result) => {
@@ -21,7 +20,7 @@ module.exports = {
             return;
           }
           if (!result[0] || result.length == 0) {
-            db.query(
+            client.query(
               "INSERT INTO `guilds`(`guildId`, `timezone`, `customConfig`, `premium`, `join_message`, `join_channel`, `leave_message`, `leave_channel`, `modlogs_channel`, `sugesstions_channel`) VALUES (?,?,?,?,?,?,?,?,?,?)",
               [interaction.guildId, 0, 0, 0, "", 0, "", 0, 0, 0]
             );
